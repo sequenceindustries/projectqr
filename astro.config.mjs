@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 // SITE_URL is the public origin used for canonical URLs, sitemap and OG tags.
-const site = process.env.SITE_URL ?? 'http://localhost:8080';
+const site = process.env.SITE_URL || 'http://localhost:8080';
 
 export default defineConfig({
   site,
