@@ -1,0 +1,71 @@
+---
+import SizeSelector from './SizeSelector.astro';
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+
+<div class="dl" data-download-panel>
+  <div class="btns">
+    <button type="button" class="btn" data-dl="png" disabled>Download PNG</button>
+    <button type="button" class="btn btn--quiet" data-dl="svg" disabled>Download SVG</button>
+  </div>
+  <div class="more">
+    <SizeSelector id={id} />
+    <div class="minor">
+      <button type="button" class="btn btn--quiet btn--small" data-dl="jpg" disabled>JPG</button>
+      <button type="button" class="btn btn--quiet btn--small" data-copy disabled hidden>Copy image</button>
+    </div>
+  </div>
+  <div class="confirm" data-confirm hidden>
+    <p class="notice notice--error" data-confirm-text>Our scan check couldn’t read this design. Phones may not be able to either.</p>
+    <label class="check">
+      <input type="checkbox" data-confirm-box />
+      <span>I understand — let me download it anyway</span>
+    </label>
+  </div>
+  <p class="done" data-dl-status aria-live="polite"></p>
+  <p class="pill-note"><span class="lock-dot" aria-hidden="true"></span> Your QR code is generated in your browser. Nothing you type is uploaded.</p>
+</div>
+
+<style>
+  .dl {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-2);
+  }
+  .btns .btn {
+    padding-inline: var(--s-3);
+  }
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    align-items: end;
+    justify-content: space-between;
+  }
+  .minor {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .confirm {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .done {
+    font-size: var(--step--1);
+    color: var(--ok);
+    font-weight: 600;
+  }
+  .done:empty {
+    display: none;
+  }
+  .pill-note {
+    font-size: 0.82rem;
+  }
+</style>

@@ -1,0 +1,10 @@
+---
+/** The reader is the scanner in upload-first mode: one decoding pipeline, two pages. */
+import QRCodeScanner from './QRCodeScanner.astro';
+interface Props {
+  tool: string;
+}
+const { tool } = Astro.props;
+---
+
+<QRCodeScanner tool={tool} mode="reader" />

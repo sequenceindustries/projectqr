@@ -1,0 +1,77 @@
+---
+import ToolIcon from './ToolIcon.astro';
+import type { Tool } from '../data/tools';
+interface Props {
+  tool: Tool;
+  headingLevel?: 'h2' | 'h3';
+  flagship?: boolean;
+}
+const { tool, headingLevel = 'h3', flagship = false } = Astro.props;
+const H = headingLevel;
+---
+
+<a class:list={['tool-card', { flagship }]} href={`/${tool.slug}`}>
+  <span class="art grid-dots"><ToolIcon slug={tool.slug} /></span>
+  <span class="text">
+    <H class="name">{tool.name}</H>
+    <span class="blurb">{tool.blurb}</span>
+  </span>
+</a>
+
+<style>
+  .tool-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--s-3);
+    height: 100%;
+    padding: var(--s-3) var(--s-3) var(--s-4);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px var(--line);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .tool-card:hover {
+    color: var(--ink);
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1.5px var(--ink), var(--lift-hi);
+  }
+  .art {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--r-md);
+    background-color: var(--paper);
+  }
+  .art :global(.tool-icon) {
+    width: 62%;
+    height: auto;
+  }
+  .text {
+    display: grid;
+    gap: 2px;
+    padding-inline: var(--s-2);
+    align-content: start;
+  }
+  .name {
+    font-size: var(--step-1);
+  }
+  .blurb {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  @media (max-width: 699px) {
+    .name {
+      font-size: var(--step-0);
+    }
+  }
+  .flagship .art {
+    background-color: #f0fbd0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tool-card:hover {
+      transform: none;
+    }
+  }
+</style>

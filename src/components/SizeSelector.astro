@@ -1,0 +1,61 @@
+---
+import { LIMITS } from '../../shared/qr/render';
+interface Props {
+  id: string;
+  value?: number;
+}
+const { id, value = 1024 } = Astro.props;
+const presets = [256, 512, 1024, 2048, 4096];
+---
+
+<div class="size" data-size-wrap>
+  <label class="label" for={`${id}-size`}>Image size</label>
+  <div class="row">
+    <select class="input" id={`${id}-size`} data-size>
+      {
+        presets.map((p) => (
+          <option value={p} selected={p === value}>
+            {p} × {p} px
+          </option>
+        ))
+      }
+      <option value="custom">Custom…</option>
+    </select>
+    <input
+      class="input custom"
+      type="number"
+      inputmode="numeric"
+      min={LIMITS.sizeMin}
+      max={LIMITS.sizeMax}
+      step="1"
+      value={value}
+      data-size-custom
+      aria-label={`Custom size in pixels, ${LIMITS.sizeMin} to ${LIMITS.sizeMax}`}
+      hidden
+    />
+  </div>
+  <span class="field-hint" data-size-hint>PNG and JPG. SVG scales to any size.</span>
+</div>
+
+<style>
+  .size {
+    display: grid;
+    gap: var(--s-1);
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+  .row {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .row select {
+    min-height: 44px;
+    flex: 1;
+    min-width: 0;
+  }
+  .custom {
+    min-height: 44px;
+    width: 7.5rem;
+    flex: none;
+  }
+</style>

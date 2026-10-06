@@ -1,0 +1,67 @@
+---
+/** Native colour wheel + hex field, kept in sync by the generator script. */
+interface Props {
+  id: string;
+  name: 'fg' | 'bg' | 'eye';
+  label: string;
+  value: string;
+}
+const { id, name, label, value } = Astro.props;
+---
+
+<div class="cp" data-colour={name}>
+  <span class="label" id={`${id}-l`}>{label}</span>
+  <div class="row">
+    <input type="color" class="swatch" value={value} data-d={name} aria-labelledby={`${id}-l`} />
+    <input
+      class="input hex"
+      type="text"
+      value={value}
+      data-d={`${name}-hex`}
+      maxlength="7"
+      spellcheck="false"
+      autocapitalize="off"
+      autocomplete="off"
+      aria-label={`${label}, hex code`}
+    />
+  </div>
+</div>
+
+<style>
+  .cp {
+    display: grid;
+    gap: var(--s-1);
+    min-width: 0;
+  }
+  .row {
+    display: flex;
+    gap: var(--s-2);
+    align-items: center;
+  }
+  .swatch {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: none;
+    cursor: pointer;
+  }
+  .swatch::-webkit-color-swatch-wrapper {
+    padding: 4px;
+  }
+  .swatch::-webkit-color-swatch {
+    border: 0;
+    border-radius: 9px;
+  }
+  .swatch::-moz-color-swatch {
+    border: 0;
+    border-radius: 9px;
+  }
+  .hex {
+    min-width: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: uppercase;
+  }
+</style>

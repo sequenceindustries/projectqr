@@ -1,0 +1,197 @@
+---
+import ColorPicker from './ColorPicker.astro';
+import { BATCH } from '../../shared/qr/batch';
+import { DEFAULT_DESIGN } from '../../shared/qr/render';
+interface Props {
+  tool: string;
+}
+const { tool } = Astro.props;
+const example = `Name,URL
+Google,https://google.com
+OpenAI,https://openai.com
+Sequence Industries,https://example.com`;
+---
+
+<section class="batch" data-batch data-tool={tool} aria-label="Batch QR code generator">
+  <div class="b-in card">
+    <div class="b-head">
+      <label class="label big" for="b-csv">Your list (CSV)</label>
+      <div class="b-head-actions">
+        <button type="button" class="btn btn--quiet btn--small" data-example>Use example</button>
+        <label class="btn btn--quiet btn--small up">
+          <input type="file" accept=".csv,.txt,text/csv,text/plain" class="visually-hidden" data-csv-file />
+          Upload CSV
+        </label>
+      </div>
+    </div>
+    <textarea class="input csv" id="b-csv" data-csv rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder={example} aria-describedby="b-csv-h"></textarea>
+    <p class="field-hint" id="b-csv-h">
+      One QR code per row. First column is the name (used for the file name), second is the link or text. A header row is optional. Up to {BATCH.maxRows} rows.
+    </p>
+
+    <div class="opts">
+      <fieldset class="seg">
+        <legend class="label">Each row contains</legend>
+        <label><input type="radio" name="b-type" value="url" checked data-b-type /><span>Links</span></label>
+        <label><input type="radio" name="b-type" value="text" data-b-type /><span>Text</span></label>
+      </fieldset>
+      <fieldset class="seg">
+        <legend class="label">File format</legend>
+        <label><input type="radio" name="b-fmt" value="png" checked data-b-fmt /><span>PNG</span></label>
+        <label><input type="radio" name="b-fmt" value="svg" data-b-fmt /><span>SVG</span></label>
+      </fieldset>
+      <div class="field" data-b-size-wrap>
+        <label class="label" for="b-size">PNG size</label>
+        <select class="input" id="b-size" data-b-size>
+          <option value="512">512 × 512 px</option>
+          <option value="1024" selected>1024 × 1024 px</option>
+          <option value="2048">2048 × 2048 px</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" for="b-ec">Error correction</label>
+        <select class="input" id="b-ec" data-b-ec>
+          <option value="L">Low (7%)</option>
+          <option value="M" selected>Medium (15%)</option>
+          <option value="Q">Quartile (25%)</option>
+          <option value="H">High (30%)</option>
+        </select>
+      </div>
+      <ColorPicker id="b-fg" name="fg" label="QR colour" value={DEFAULT_DESIGN.fg} />
+      <ColorPicker id="b-bg" name="bg" label="Background" value={DEFAULT_DESIGN.bg} />
+    </div>
+
+    <p class="notice notice--error" data-b-error role="alert" hidden></p>
+    <button type="button" class="btn btn--block go" data-b-run>Generate QR codes</button>
+    <p class="pill-note"><span class="lock-dot" aria-hidden="true"></span> Your list never leaves your browser. The ZIP is built on your device.</p>
+  </div>
+
+  <div class="b-out card" data-b-out hidden tabindex="-1">
+    <div class="b-sum">
+      <p class="b-count" data-b-count aria-live="polite"></p>
+      <progress data-b-progress max="100" value="0" hidden></progress>
+      <button type="button" class="btn btn--mark" data-b-zip disabled>Download ZIP</button>
+    </div>
+    <div class="b-issues" data-b-issues hidden>
+      <p class="label">Skipped rows</p>
+      <ul data-b-errors></ul>
+    </div>
+    <ul class="b-grid" data-b-grid role="list"></ul>
+    <p class="field-hint" data-b-more></p>
+  </div>
+</section>
+
+<script>
+  import { mountBatch } from '../scripts/batch';
+  mountBatch();
+</script>
+
+<style>
+  .batch {
+    display: grid;
+    gap: var(--s-5);
+  }
+  .card {
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line), var(--lift);
+  }
+  .b-in,
+  .b-out {
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-5);
+  }
+  @media (max-width: 599px) {
+    .b-in,
+    .b-out {
+      padding: var(--s-4);
+    }
+  }
+  .b-out:focus {
+    outline: none;
+  }
+  .b-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+  .b-head-actions {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .big {
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+  .up:focus-within {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+  .csv {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92rem;
+    min-height: 220px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .opts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+    gap: var(--s-4);
+    align-items: start;
+  }
+  .go {
+    min-height: 56px;
+    font-size: var(--step-1);
+  }
+  .b-sum {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .b-count {
+    font: 700 var(--step-1) / 1.2 var(--font-display);
+  }
+  progress {
+    flex: 1 1 100%;
+    height: 8px;
+    accent-color: var(--ink);
+  }
+  .b-issues ul {
+    margin: var(--s-2) 0 0;
+    padding-left: 1.2em;
+    font-size: var(--step--1);
+    color: var(--err);
+  }
+  .b-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+    gap: var(--s-3);
+  }
+  .b-grid :global(li) {
+    display: grid;
+    gap: var(--s-1);
+    min-width: 0;
+  }
+  .b-grid :global(svg) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-sm);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .b-grid :global(span) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

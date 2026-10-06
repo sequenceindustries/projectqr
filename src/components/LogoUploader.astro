@@ -1,0 +1,62 @@
+---
+import { LIMITS } from '../../shared/qr/render';
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+const max = Math.round(LIMITS.logoMax * 100);
+const def = Math.round(LIMITS.logoDefault * 100);
+---
+
+<div class="logo" data-logo>
+  <span class="visually-hidden" id={`${id}-logo-l`}>Logo</span>
+  <div class="logo-row">
+    <label class="btn btn--quiet btn--small pick">
+      <input type="file" accept="image/png,image/jpeg,image/webp" class="visually-hidden" data-logo-input aria-labelledby={`${id}-logo-l`} aria-describedby={`${id}-logo-h ${id}-logo-e`} />
+      <span data-logo-pick-label>Add a logo</span>
+    </label>
+    <img data-logo-thumb alt="Your logo" width="44" height="44" hidden />
+    <button type="button" class="btn btn--quiet btn--small" data-logo-remove hidden>Remove</button>
+  </div>
+  <span class="field-hint" id={`${id}-logo-h`}>PNG, JPG or WebP, up to 2 MB. It stays on your device.</span>
+  <span class="field-error" id={`${id}-logo-e`} data-logo-error role="alert"></span>
+  <div class="field" data-logo-size hidden>
+    <label class="label" for={`${id}-logo-scale`}>Logo size: <output data-logo-scale-out>{def}%</output></label>
+    <input class="range" type="range" id={`${id}-logo-scale`} min="10" max={max} step="1" value={def} data-logo-scale />
+    <span class="field-hint">Capped at {max}% so the code keeps enough data to scan. Error correction is set to High automatically.</span>
+  </div>
+</div>
+
+<style>
+  .logo {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+  }
+  .pick {
+    position: relative;
+  }
+  .pick:focus-within {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+  [data-logo-thumb] {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: var(--r-sm);
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .field-error:empty {
+    display: none;
+  }
+  .field {
+    margin-top: var(--s-2);
+  }
+</style>

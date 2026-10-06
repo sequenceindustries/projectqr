@@ -1,0 +1,100 @@
+---
+interface Props {
+  id: string;
+  value?: 'L' | 'M' | 'Q' | 'H';
+}
+const { id, value = 'M' } = Astro.props;
+const levels = [
+  { v: 'L', name: 'Low', pct: '7%' },
+  { v: 'M', name: 'Medium', pct: '15%' },
+  { v: 'Q', name: 'Quartile', pct: '25%' },
+  { v: 'H', name: 'High', pct: '30%' },
+];
+---
+
+<fieldset class="ec" data-ec-group>
+  <legend class="label">Error correction</legend>
+  <div class="opts">
+    {
+      levels.map((l) => (
+        <label>
+          <input type="radio" name={`${id}-ec`} value={l.v} checked={l.v === value} data-ec />
+          <span>
+            <b>{l.v}</b>
+            <small>
+              {l.name} · {l.pct}
+            </small>
+          </span>
+        </label>
+      ))
+    }
+  </div>
+  <p class="field-hint" data-ec-note>Higher levels survive scratches, dirt and logos, but make the code denser.</p>
+</fieldset>
+
+<style>
+  .ec {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+  .ec legend {
+    padding: 0;
+    margin-bottom: var(--s-2);
+  }
+  .opts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-2);
+  }
+  label {
+    position: relative;
+  }
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  input:disabled {
+    cursor: not-allowed;
+  }
+  span {
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    min-height: 56px;
+    padding: var(--s-2) var(--s-1);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1.5px var(--line-strong);
+    text-align: center;
+  }
+  b {
+    font: 700 var(--step-1) / 1 var(--font-display);
+  }
+  small {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+  input:checked + span {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: inset 0 -3px 0 var(--mark);
+  }
+  input:checked + span small {
+    color: #d8dae3;
+  }
+  input:disabled + span {
+    opacity: 0.4;
+  }
+  input:focus-visible + span {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+</style>

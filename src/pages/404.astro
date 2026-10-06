@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import ToolGrid from '../components/ToolGrid.astro';
+import { tools } from '../data/tools';
+---
+
+<Base title="Page not found — QR Tools" description="This page doesn't exist." path="/404" noindex>
+  <section class="wrap nf">
+    <h1>This code doesn’t lead anywhere.</h1>
+    <p>The page you’re looking for doesn’t exist. Try one of the tools below, or <a href="/">make a QR code</a>.</p>
+  </section>
+  <section class="wrap">
+    <ToolGrid tools={tools} headingLevel="h2" />
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: var(--s-6) var(--s-7);
+    display: grid;
+    gap: var(--s-4);
+  }
+  .nf h1 {
+    font-size: var(--step-4);
+    max-width: 16ch;
+  }
+  .nf p {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+</style>

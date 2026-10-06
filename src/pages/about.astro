@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import ToolGrid from '../components/ToolGrid.astro';
+import { tools } from '../data/tools';
+---
+
+<Base title="About QR Tools" description="QR Tools is a free, fast set of QR code utilities from Sequence Industries: generate, customise, scan, read and batch-create QR codes in your browser." path="/about">
+  <article class="wrap prose">
+    <h1>About QR Tools</h1>
+    <p class="lede">The fastest place on the internet to create, customise and read QR codes.</p>
+    <p>QR Tools is built by Sequence Industries. It does one thing well: you enter something, a QR code appears, and you download it. There are no accounts, no trials and no watermarks.</p>
+    <p>Every code is static — the content lives inside the code — so it never expires and never depends on our servers. Codes are generated in your browser, and every design is scan-checked before download so a pretty code is never an unreadable one.</p>
+  </article>
+  <section class="wrap tools" aria-labelledby="t-h">
+    <h2 id="t-h">The tools</h2>
+    <ToolGrid tools={tools} />
+  </section>
+</Base>
+
+<style>
+  .prose {
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    padding-top: var(--s-5);
+  }
+  .prose h1 {
+    font-size: var(--step-4);
+    margin-bottom: var(--s-4);
+  }
+  .lede {
+    font-size: var(--step-1);
+    margin-bottom: var(--s-5);
+  }
+  .prose p + p {
+    margin-top: var(--s-3);
+  }
+  .prose p:not(.lede) {
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .tools {
+    margin-top: var(--s-8);
+  }
+  .tools h2 {
+    margin-bottom: var(--s-5);
+  }
+</style>

@@ -1,0 +1,316 @@
+---
+import ColorPicker from './ColorPicker.astro';
+import LogoUploader from './LogoUploader.astro';
+import ErrorCorrectionSelector from './ErrorCorrectionSelector.astro';
+import { DEFAULT_DESIGN, LIMITS } from '../../shared/qr/render';
+
+interface Props {
+  id: string;
+  open?: boolean;
+  /** Render as a plain panel instead of a collapsible section. */
+  inline?: boolean;
+}
+const { id, open = false, inline = false } = Astro.props;
+
+const presets = [
+  { name: 'Ink on white', fg: '#13151f', bg: '#ffffff' },
+  { name: 'Forest on cream', fg: '#0b4f3b', bg: '#fbf7ec' },
+  { name: 'Indigo on white', fg: '#3525d8', bg: '#ffffff' },
+  { name: 'Plum on blush', fg: '#5b1d4e', bg: '#fff0f3' },
+  { name: 'Black on lime', fg: '#000000', bg: '#d9fb6a' },
+  { name: 'Navy on sky', fg: '#0d2a5c', bg: '#e6f1ff' },
+];
+const modules = [
+  { v: 'square', label: 'Square' },
+  { v: 'rounded', label: 'Rounded' },
+  { v: 'dots', label: 'Dots' },
+];
+const eyes = [
+  { v: 'square', label: 'Square' },
+  { v: 'rounded', label: 'Rounded' },
+  { v: 'circle', label: 'Circle' },
+];
+const Tag = inline ? 'div' : 'details';
+---
+
+<Tag class:list={['design', { inline }]} open={!inline && open ? true : undefined} data-design>
+  {
+    inline ? (
+      <h2 class="design-h">Design</h2>
+    ) : (
+      <summary>
+        <span class="sum-t">Customise design</span>
+        <span class="sum-s">Colours, style, logo, error correction</span>
+      </summary>
+    )
+  }
+  <div class="body">
+    <section class="block" aria-labelledby={`${id}-col-h`}>
+      <h3 id={`${id}-col-h`}>Colours</h3>
+      <div class="presets" role="group" aria-label="Colour presets">
+        {
+          presets.map((p) => (
+            <button type="button" class="preset" data-preset={`${p.fg},${p.bg}`} aria-label={p.name} title={p.name}>
+              <span style={`background:${p.bg}`}>
+                <i style={`background:${p.fg}`} />
+              </span>
+            </button>
+          ))
+        }
+      </div>
+      <div class="two">
+        <ColorPicker id={`${id}-fg`} name="fg" label="QR colour" value={DEFAULT_DESIGN.fg} />
+        <ColorPicker id={`${id}-bg`} name="bg" label="Background" value={DEFAULT_DESIGN.bg} />
+      </div>
+      <label class="check">
+        <input type="checkbox" checked data-d="eye-same" />
+        <span>Corners use the QR colour</span>
+      </label>
+      <div data-eye-wrap hidden>
+        <ColorPicker id={`${id}-eye`} name="eye" label="Corner colour" value={DEFAULT_DESIGN.fg} />
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby={`${id}-sty-h`}>
+      <h3 id={`${id}-sty-h`}>Style</h3>
+      <fieldset class="style-set">
+        <legend class="label">Pattern</legend>
+        <div class="tiles">
+          {
+            modules.map((m) => (
+              <label>
+                <input type="radio" name={`${id}-module`} value={m.v} checked={m.v === 'square'} data-module />
+                <span>
+                  <svg viewBox="0 0 30 30" aria-hidden="true">
+                    {[
+                      [3, 3],
+                      [11, 3],
+                      [11, 11],
+                      [19, 11],
+                      [3, 19],
+                      [19, 19],
+                      [11, 19],
+                    ].map(([x, y]) =>
+                      m.v === 'dots' ? (
+                        <circle cx={x + 4} cy={y + 4} r="3.6" />
+                      ) : (
+                        <rect x={x} y={y} width="8" height="8" rx={m.v === 'rounded' ? 3.2 : 0} />
+                      ),
+                    )}
+                  </svg>
+                  {m.label}
+                </span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset class="style-set">
+        <legend class="label">Corners</legend>
+        <div class="tiles">
+          {
+            eyes.map((e) => (
+              <label>
+                <input type="radio" name={`${id}-eye`} value={e.v} checked={e.v === 'square'} data-eye />
+                <span>
+                  <svg viewBox="0 0 30 30" aria-hidden="true">
+                    {e.v === 'circle' ? (
+                      <path fill-rule="evenodd" d="M15 1a14 14 0 1 1 0 28a14 14 0 1 1 0-28ZM15 5a10 10 0 1 0 0 20a10 10 0 1 0 0-20ZM15 9a6 6 0 1 1 0 12a6 6 0 1 1 0-12Z" />
+                    ) : e.v === 'rounded' ? (
+                      <path fill-rule="evenodd" d="M9 1h12a8 8 0 0 1 8 8v12a8 8 0 0 1-8 8H9a8 8 0 0 1-8-8V9a8 8 0 0 1 8-8ZM10 5a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V10a5 5 0 0 0-5-5ZM12 9h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3Z" />
+                    ) : (
+                      <path fill-rule="evenodd" d="M1 1h28v28H1ZM5 5v20h20V5ZM9 9h12v12H9Z" />
+                    )}
+                  </svg>
+                  {e.label}
+                </span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="block" aria-labelledby={`${id}-logo-h2`}>
+      <h3 id={`${id}-logo-h2`}>Logo</h3>
+      <LogoUploader id={id} />
+    </section>
+
+    <section class="block" aria-labelledby={`${id}-adv-h`}>
+      <h3 id={`${id}-adv-h`}>Reliability</h3>
+      <div class="field">
+        <label class="label" for={`${id}-margin`}>Clear space around the code: <output data-margin-out>{DEFAULT_DESIGN.margin}</output> modules</label>
+        <input class="range" type="range" id={`${id}-margin`} min={LIMITS.marginMin} max={LIMITS.marginMax} step="1" value={DEFAULT_DESIGN.margin} data-d="margin" />
+      </div>
+      <ErrorCorrectionSelector id={id} />
+    </section>
+
+    <button type="button" class="reset" data-reset-design>Reset design</button>
+  </div>
+</Tag>
+
+<style>
+  .design {
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: var(--s-4);
+    align-items: center;
+    min-height: 72px;
+    padding: var(--s-3) var(--s-5);
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--r-lg);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '';
+    grid-row: 1 / 3;
+    grid-column: 2;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    border-right: 2.5px solid var(--ink);
+    border-bottom: 2.5px solid var(--ink);
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform 0.2s var(--ease);
+  }
+  details[open] summary::after {
+    transform: rotate(-135deg) translateY(-3px);
+  }
+  .sum-t {
+    font: 650 var(--step-1) / 1.2 var(--font-display);
+  }
+  .sum-s {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .design-h {
+    padding: var(--s-5) var(--s-5) 0;
+    font-size: var(--step-2);
+  }
+  .body {
+    display: grid;
+    gap: var(--s-6);
+    padding: var(--s-2) var(--s-5) var(--s-5);
+  }
+  .inline .body {
+    padding-top: var(--s-4);
+  }
+  .block {
+    display: grid;
+    gap: var(--s-4);
+  }
+  .block + .block {
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--line);
+  }
+  h3 {
+    font-size: var(--step-0);
+    font-family: var(--font-body);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-3);
+  }
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .preset {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: none;
+    cursor: pointer;
+  }
+  .preset span {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--r-sm);
+    box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  }
+  .preset i {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+  }
+  .preset:hover span {
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+  .style-set {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .style-set legend {
+    padding: 0;
+    margin-bottom: var(--s-2);
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+  }
+  .tiles label {
+    position: relative;
+  }
+  .tiles input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .tiles span {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-1);
+    padding: var(--s-3) var(--s-2) var(--s-2);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1.5px var(--line-strong);
+    font-size: var(--step--1);
+    font-weight: 650;
+  }
+  .tiles svg {
+    width: 34px;
+    height: 34px;
+    fill: var(--ink);
+  }
+  .tiles input:checked + span {
+    box-shadow: inset 0 0 0 2.5px var(--ink);
+    background: #f0fbd0;
+  }
+  .tiles input:focus-visible + span {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+  .reset {
+    justify-self: start;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--signal);
+    font: 650 var(--step--1) var(--font-body);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+</style>

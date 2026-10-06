@@ -1,0 +1,110 @@
+---
+/**
+ * The flagship: choose a type → fill in → live preview → customise → download.
+ * Used by the homepage and every generator page; behaviour lives in
+ * src/scripts/generator.ts and the QR logic in shared/qr/.
+ */
+import QRCodeTypeSelector from './QRCodeTypeSelector.astro';
+import QRCodeFields from './QRCodeFields.astro';
+import QRCodeCustomizer from './QRCodeCustomizer.astro';
+import QRCodePreview from './QRCodePreview.astro';
+import QRCodeDownload from './QRCodeDownload.astro';
+import type { QrType } from '../../shared/qr/payload';
+
+interface Props {
+  tool: string;
+  types?: QrType[];
+  type?: QrType;
+  /** "open" = customiser expanded; "inline" = always-visible design panel (custom page). */
+  design?: 'closed' | 'open' | 'inline';
+  caption?: string;
+  action?: string;
+}
+const ALL: QrType[] = ['url', 'text', 'wifi', 'vcard', 'email', 'phone', 'sms', 'whatsapp', 'location'];
+const { tool, types = ALL, type = types[0], design = 'closed', caption, action = 'Generate QR code' } = Astro.props;
+const id = 'g';
+---
+
+<section class:list={['gen', `gen--${design}`]} data-generator data-tool={tool} data-type={type} aria-label="QR code generator">
+  <div class="gen-form card">
+    <form data-form novalidate>
+      {types.length > 1 && <QRCodeTypeSelector id={id} types={types} value={type} />}
+      <QRCodeFields id={id} types={types} value={type} />
+      <p class="notice notice--error" data-form-error role="alert" hidden></p>
+      <button type="submit" class="btn btn--block generate" data-generate>{action}</button>
+    </form>
+  </div>
+
+  <div class="gen-out card" data-out>
+    <QRCodePreview caption={caption} />
+    <QRCodeDownload id={id} />
+  </div>
+
+  <div class="gen-design">
+    <QRCodeCustomizer id={id} open={design === 'open'} inline={design === 'inline'} />
+  </div>
+</section>
+
+<script>
+  import { mountGenerators } from '../scripts/generator';
+  mountGenerators();
+</script>
+
+<style>
+  .gen {
+    display: grid;
+    gap: var(--s-4);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'form' 'out' 'design';
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .gen {
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      grid-template-areas: 'form out' 'design out';
+      grid-template-rows: auto 1fr;
+      gap: var(--s-5);
+    }
+    .gen-out {
+      position: sticky;
+      top: var(--s-4);
+    }
+    /* The custom page leads with design: controls left, code right. */
+    .gen--inline {
+      grid-template-areas: 'form out' 'design out';
+    }
+  }
+  .card {
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line), var(--lift);
+  }
+  .gen-form {
+    grid-area: form;
+    padding: var(--s-5);
+  }
+  .gen-out {
+    grid-area: out;
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-4) var(--s-5) var(--s-5);
+  }
+  .gen-design {
+    grid-area: design;
+    min-width: 0;
+  }
+  form {
+    display: grid;
+    gap: var(--s-5);
+  }
+  .generate {
+    min-height: 56px;
+    font-size: var(--step-1);
+  }
+  @media (max-width: 599px) {
+    .gen-form,
+    .gen-out {
+      padding: var(--s-4);
+    }
+  }
+</style>

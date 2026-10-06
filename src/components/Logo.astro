@@ -1,0 +1,16 @@
+---
+/** Mark: a QR finder pattern with one lime data module. */
+interface Props {
+  size?: number;
+  light?: boolean;
+}
+const { size = 30, light = false } = Astro.props;
+const ink = light ? '#ffffff' : '#13151f';
+---
+
+<svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+  <path fill={ink} fill-rule="evenodd" d="M2 2h20v20H2Zm4 4v12h12V6Zm3 3h6v6H9Z"></path>
+  <rect x="24" y="24" width="6" height="6" rx="1.2" fill="#c6f432"></rect>
+  <rect x="24" y="12" width="4" height="4" rx="0.8" fill={ink}></rect>
+  <rect x="12" y="24" width="4" height="4" rx="0.8" fill={ink}></rect>
+</svg>

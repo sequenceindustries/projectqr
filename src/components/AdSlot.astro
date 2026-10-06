@@ -1,0 +1,39 @@
+---
+/**
+ * Reserved advertising placement. Renders nothing until ads are switched
+ * on (PUBLIC_ADS_ENABLED=true). Slots are only placed outside the tool
+ * workspace so ads can never cover controls or downloads.
+ */
+interface Props {
+  name: string;
+}
+const { name } = Astro.props;
+const enabled = import.meta.env.PUBLIC_ADS_ENABLED === 'true';
+---
+
+{
+  enabled && (
+    <aside class="ad-slot wrap" data-ad-slot={name} aria-label="Advertisement">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-body" />
+    </aside>
+  )
+}
+
+<style>
+  .ad-slot {
+    margin-block: var(--s-7);
+  }
+  .ad-label {
+    display: block;
+    margin-bottom: var(--s-1);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+  .ad-body {
+    min-height: 120px;
+    border-radius: var(--r-md);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+</style>

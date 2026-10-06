@@ -1,0 +1,294 @@
+---
+/**
+ * Scanner and reader share this component and src/scripts/scanner.ts.
+ * mode="scanner": camera first, with upload/drag/paste as alternatives.
+ * mode="reader":  upload first; the camera is one tap away.
+ * Decoding happens on this device; frames and images are never uploaded.
+ */
+interface Props {
+  tool: string;
+  mode: 'scanner' | 'reader';
+}
+const { tool, mode } = Astro.props;
+---
+
+<section class:list={['scan', `scan--${mode}`]} data-scanner data-tool={tool} data-mode={mode} aria-label={mode === 'scanner' ? 'QR code scanner' : 'QR code reader'}>
+  <div class="scan-main card">
+    <!-- Camera view -->
+    <div class="cam" data-cam hidden>
+      <div class="cam-frame">
+        <video data-video playsinline muted aria-label="Camera preview"></video>
+        <div class="reticle finder" aria-hidden="true"></div>
+        <p class="cam-hint" data-cam-hint>Point your camera at a QR code</p>
+      </div>
+      <div class="cam-bar">
+        <button type="button" class="btn btn--quiet btn--small" data-cam-stop>Stop camera</button>
+        <button type="button" class="btn btn--quiet btn--small" data-cam-switch hidden>Switch camera</button>
+        <button type="button" class="btn btn--quiet btn--small" data-cam-torch aria-pressed="false" hidden>Torch</button>
+      </div>
+    </div>
+
+    <!-- Start / upload -->
+    <div class="drop" data-drop>
+      <div class="drop-inner">
+        <svg class="drop-art" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M4 18V8a4 4 0 0 1 4-4h10M46 4h10a4 4 0 0 1 4 4v10M60 46v10a4 4 0 0 1-4 4H46M18 60H8a4 4 0 0 1-4-4V46" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+          <path fill-rule="evenodd" d="M16 16h12v12H16Zm3 3v6h6v-6ZM36 16h12v12H36Zm3 3v6h6v-6ZM16 36h12v12H16Zm3 3v6h6v-6Z" fill="currentColor"></path>
+          <rect x="36" y="36" width="5" height="5" fill="currentColor"></rect><rect x="43" y="43" width="5" height="5" fill="currentColor"></rect><rect x="43" y="36" width="5" height="3" fill="currentColor" opacity=".5"></rect>
+        </svg>
+        {
+          mode === 'scanner' ? (
+            <>
+              <button type="button" class="btn btn--mark start" data-cam-start>
+                Scan with camera
+              </button>
+              <p class="or">or</p>
+              <label class="btn btn--quiet upload">
+                <input type="file" accept="image/*" class="visually-hidden" data-file />
+                Upload a QR image
+              </label>
+              <p class="drop-hint">You can also drag an image here or paste one with Ctrl/⌘ + V.</p>
+            </>
+          ) : (
+            <>
+              <label class="btn btn--mark upload start">
+                <input type="file" accept="image/*" class="visually-hidden" data-file />
+                Upload a QR image
+              </label>
+              <p class="drop-hint">Drag a screenshot or photo here, or paste one with Ctrl/⌘ + V.</p>
+              <button type="button" class="link-btn" data-cam-start>
+                Use your camera instead
+              </button>
+            </>
+          )
+        }
+      </div>
+    </div>
+
+    <p class="notice notice--error" data-scan-error role="alert" hidden></p>
+    <p class="status" data-scan-status aria-live="polite"></p>
+    <canvas data-canvas hidden></canvas>
+  </div>
+
+  <div class="result card" data-result hidden tabindex="-1" aria-live="polite">
+    <p class="r-label" data-r-label></p>
+    <div class="r-body" data-r-body></div>
+    <div class="r-actions" data-r-actions></div>
+    <button type="button" class="again" data-again>Scan another code</button>
+  </div>
+
+  <p class="pill-note privacy"><span class="lock-dot" aria-hidden="true"></span> Decoded on your device. Camera frames and images are never uploaded or stored.</p>
+</section>
+
+<script>
+  import { mountScanners } from '../scripts/scanner';
+  mountScanners();
+</script>
+
+<style>
+  .scan {
+    display: grid;
+    gap: var(--s-4);
+    max-width: 760px;
+  }
+  .card {
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line), var(--lift);
+  }
+  .scan-main {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-3);
+  }
+  .drop {
+    display: grid;
+    place-items: center;
+    min-height: 340px;
+    padding: var(--s-6) var(--s-4);
+    border: 2px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    text-align: center;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .drop.is-over {
+    border-color: var(--ink);
+    background: #f0fbd0;
+  }
+  .drop-inner {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-3);
+  }
+  .drop-art {
+    width: 72px;
+    height: 72px;
+    color: var(--ink);
+    margin-bottom: var(--s-2);
+  }
+  .start {
+    min-width: min(100%, 260px);
+    min-height: 58px;
+    font-size: var(--step-1);
+  }
+  .upload {
+    position: relative;
+    min-width: min(100%, 220px);
+  }
+  .upload:focus-within {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+  .or {
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+  .drop-hint {
+    max-width: 34ch;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .link-btn {
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--signal);
+    font: 650 var(--step-0) var(--font-body);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .cam {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .cam-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    background: #000;
+    aspect-ratio: 3 / 4;
+    max-height: 72vh;
+  }
+  @media (min-width: 700px) {
+    .cam-frame {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .reticle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(64%, 64vw, 340px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    --mark-ink: var(--mark);
+    --f-inset: 0;
+    --f-len: 34px;
+    --f-w: 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.35);
+  }
+  .cam-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--s-4);
+    text-align: center;
+    color: #fff;
+    font-weight: 650;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+  }
+  .cam-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    justify-content: center;
+  }
+  .status {
+    text-align: center;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .status:empty {
+    display: none;
+  }
+
+  .result {
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-5);
+    border-top: 6px solid var(--mark);
+  }
+  .result:focus {
+    outline: none;
+  }
+  .r-label {
+    font: 700 var(--step-2) / 1.1 var(--font-display);
+  }
+  .r-body {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .r-body :global(.r-text) {
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: var(--step--1);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: 18rem;
+    overflow: auto;
+  }
+  .r-body :global(dl) {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--s-2) var(--s-4);
+    margin: 0;
+  }
+  .r-body :global(dt) {
+    font-weight: 650;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .r-body :global(dd) {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .r-body :global(.r-warn) {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .r-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .r-actions :global(.btn) {
+    flex: 1 1 160px;
+  }
+  .again {
+    justify-self: start;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--signal);
+    font: 650 var(--step-0) var(--font-body);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+  .privacy {
+    justify-content: center;
+  }
+</style>

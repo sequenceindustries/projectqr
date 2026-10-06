@@ -1,0 +1,148 @@
+---
+import { FIELDS, TYPE_HINT } from '../data/fields';
+import type { QrType } from '../../shared/qr/payload';
+interface Props {
+  id: string;
+  types: QrType[];
+  value: QrType;
+}
+const { id, types, value } = Astro.props;
+---
+
+{
+  types.map((type) => (
+    <div class="group" data-fields={type} hidden={type !== value}>
+      {FIELDS[type].map((fd) => {
+        const fid = `${id}-${type}-${fd.f}`;
+        const described = [fd.hint ? `${fid}-hint` : '', `${fid}-err`].filter(Boolean).join(' ');
+        if (fd.kind === 'check')
+          return (
+            <div class="f full">
+              <label class="check">
+                <input type="checkbox" id={fid} data-f={fd.f} aria-describedby={fd.hint ? `${fid}-hint` : undefined} />
+                <span>{fd.label}</span>
+              </label>
+              {fd.hint && <span class="field-hint" id={`${fid}-hint`}>{fd.hint}</span>}
+            </div>
+          );
+        return (
+          <div class:list={['f', { full: !fd.half }]} data-wrap={fd.f}>
+            <label class="label" for={fid}>
+              {fd.label}
+              {fd.optional && <span class="opt"> (optional)</span>}
+            </label>
+            {fd.kind === 'textarea' ? (
+              <textarea class="input" id={fid} data-f={fd.f} placeholder={fd.placeholder} autocomplete={fd.autocomplete ?? 'off'} rows="3" aria-describedby={described} />
+            ) : fd.kind === 'select' ? (
+              <select class="input" id={fid} data-f={fd.f} aria-describedby={described}>
+                {fd.options!.map((o) => (
+                  <option value={o.value} selected={o.value === fd.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            ) : fd.kind === 'password' ? (
+              <div class="pw">
+                <input
+                  class="input"
+                  id={fid}
+                  data-f={fd.f}
+                  type="password"
+                  placeholder={fd.placeholder}
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  aria-describedby={described}
+                />
+                <button type="button" class="pw-toggle" data-pw-toggle aria-controls={fid} aria-pressed="false">
+                  Show
+                </button>
+              </div>
+            ) : (
+              <input
+                class="input"
+                id={fid}
+                data-f={fd.f}
+                type={fd.type ?? 'text'}
+                inputmode={fd.inputmode}
+                placeholder={fd.placeholder}
+                autocomplete={fd.autocomplete ?? 'off'}
+                autocapitalize={fd.type === 'url' || fd.type === 'email' ? 'off' : undefined}
+                spellcheck={fd.type === 'url' || fd.type === 'email' ? 'false' : undefined}
+                aria-describedby={described}
+              />
+            )}
+            {fd.hint && (
+              <span class="field-hint" id={`${fid}-hint`}>
+                {fd.hint}
+              </span>
+            )}
+            <span class="field-error" id={`${fid}-err`} data-err={fd.f} />
+          </div>
+        );
+      })}
+      {TYPE_HINT[type] && <p class="type-hint">{TYPE_HINT[type]}</p>}
+    </div>
+  ))
+}
+
+<style>
+  .group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+  @media (min-width: 520px) {
+    .group {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .group[hidden] {
+    display: none;
+  }
+  .f {
+    display: grid;
+    gap: var(--s-1);
+    align-content: start;
+    min-width: 0;
+  }
+  .f.full {
+    grid-column: 1 / -1;
+  }
+  .label {
+    color: var(--ink);
+  }
+  .opt {
+    font-weight: 500;
+    color: var(--ink-faint);
+  }
+  .field-error:empty {
+    display: none;
+  }
+  .pw {
+    position: relative;
+  }
+  .pw .input {
+    padding-right: 5rem;
+  }
+  .pw-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-height: 40px;
+    min-width: 60px;
+    padding: 0 var(--s-3);
+    border: 0;
+    border-radius: var(--r-sm);
+    background: var(--paper);
+    color: var(--ink);
+    font: 650 var(--step--1) var(--font-body);
+    cursor: pointer;
+  }
+  .type-hint {
+    grid-column: 1 / -1;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+</style>

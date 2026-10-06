@@ -1,0 +1,70 @@
+---
+import type { Faq } from '../data/tools';
+interface Props {
+  faqs: Faq[];
+  title?: string;
+}
+const { faqs, title = 'Questions' } = Astro.props;
+---
+
+<section class="faq" aria-labelledby="faq-h">
+  <h2 id="faq-h">{title}</h2>
+  {
+    faqs.map((f) => (
+      <details>
+        <summary>
+          <h3>{f.q}</h3>
+        </summary>
+        <p>{f.a}</p>
+      </details>
+    ))
+  }
+</section>
+
+<style>
+  .faq h2 {
+    margin-bottom: var(--s-4);
+  }
+  details {
+    border-top: 1px solid var(--line);
+  }
+  details:last-of-type {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 60px;
+    padding-block: var(--s-3);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '';
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+    border-right: 2.5px solid var(--ink);
+    border-bottom: 2.5px solid var(--ink);
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform 0.2s var(--ease);
+  }
+  details[open] summary::after {
+    transform: rotate(-135deg) translateY(-3px);
+  }
+  h3 {
+    font: 650 var(--step-0) / 1.35 var(--font-body);
+    letter-spacing: 0;
+  }
+  p {
+    padding-bottom: var(--s-4);
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+</style>

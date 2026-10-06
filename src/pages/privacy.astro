@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Privacy — QR Tools" description="QR Tools generates and reads QR codes in your browser. What you type, scan or upload is never sent to our servers or stored." path="/privacy">
+  <article class="wrap prose">
+    <h1>Privacy</h1>
+    <p class="lede">Short version: QR codes are created and read on your device. We never see what’s in them.</p>
+
+    <h2>Generating QR codes</h2>
+    <p>Your QR code is generated in your browser. Links, text, Wi-Fi network names and passwords, contact details and anything else you type stay on your device. They are not uploaded, logged or stored, and nothing is saved when you close the page.</p>
+    <p>Logos you add are resized and re-encoded in your browser and are never uploaded.</p>
+    <p>The codes are static: the content is inside the code itself. We don’t run redirect links, so we can’t see or count scans of your codes.</p>
+
+    <h2>Scanning and reading</h2>
+    <p>The camera only starts after you tap “Scan with camera” and your browser asks for permission. Video frames are analysed on your device, are never recorded or uploaded, and the camera switches off as soon as a code is found or you leave the page. Images you upload, drop or paste are read the same way and discarded.</p>
+
+    <h2>Batch generation</h2>
+    <p>CSV files and pasted lists are read in your browser, and the ZIP file is built on your device.</p>
+
+    <h2>Analytics</h2>
+    <p>To understand which tools are used, we record anonymous events such as “a QR code was generated”, “an SVG was downloaded” or “a logo was added”, with the tool name and the type of QR code (for example “wifi”). Events never include what a code contains, file names, or anything you typed. We don’t use cookies or advertising identifiers, and our server logs don’t store IP addresses.</p>
+
+    <h2>Advertising</h2>
+    <p>The site may show advertising in the future. If it does, ads will never be placed over the generator, preview, scanner or download buttons, and this page will be updated to name the provider and what it collects.</p>
+
+    <h2>Contact</h2>
+    <p>QR Tools is run by Sequence Industries.</p>
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    padding-block: var(--s-5) 0;
+  }
+  .prose h1 {
+    font-size: var(--step-4);
+    margin-bottom: var(--s-4);
+  }
+  .lede {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin-bottom: var(--s-6);
+  }
+  .prose h2 {
+    font-size: var(--step-2);
+    margin: var(--s-6) 0 var(--s-3);
+  }
+  .prose p {
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .prose p + p {
+    margin-top: var(--s-3);
+  }
+</style>

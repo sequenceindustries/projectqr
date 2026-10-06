@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+.astro
+.git
+test/e2e/fixtures
+*.log
+.env

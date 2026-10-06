@@ -1,0 +1,197 @@
+---
+import Base from '../layouts/Base.astro';
+import QRCodeGenerator from '../components/QRCodeGenerator.astro';
+import ToolGrid from '../components/ToolGrid.astro';
+import FAQSection from '../components/FAQSection.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { tools } from '../data/tools';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const faqs = [
+  { q: 'Is QR Tools free?', a: 'Yes. Every tool is free, with no account, no watermark and no limit on how many codes you create. The QR codes are static, so they never expire.' },
+  { q: 'Is my data private?', a: 'QR codes are generated, scanned and zipped in your browser. What you type — links, Wi-Fi passwords, contact details — is never uploaded or stored.' },
+  { q: 'Which format should I download?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size. JPG is there if a tool needs it.' },
+  { q: 'Will my QR code work on every phone?', a: 'Yes. Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'QR Tools', url: site + '/', description: 'Create, customise and read QR codes in your browser.' },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'QR Tools — QR Code Generator',
+    url: site + '/',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: tools.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, url: `${site}/${t.slug}` })) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+
+<Base
+  title="QR Tools — Free QR Code Generator, Scanner & Reader"
+  description="Generate free QR codes for links, Wi-Fi, contact details, text and more. Customise colours, add a logo, download PNG or SVG. No account needed."
+  path="/"
+  jsonLd={jsonLd}
+>
+  <section class="hero wrap" aria-labelledby="hero-h">
+    <div class="copy">
+      <h1 id="hero-h">Create a QR code in seconds.</h1>
+      <p class="lede">Generate free QR codes for links, Wi-Fi, contact details, text and more.</p>
+    </div>
+    <QRCodeGenerator tool="home" />
+  </section>
+
+  <section class="tools wrap" aria-labelledby="tools-h">
+    <h2 id="tools-h">Every QR tool you need</h2>
+    <ToolGrid tools={tools} flagship="qr-code-generator" />
+  </section>
+
+  <AdSlot name="home-mid" />
+
+  <section class="how wrap" aria-labelledby="how-h">
+    <h2 id="how-h">Enter. Generate. Download.</h2>
+    <ol>
+      <li>
+        <h3>Enter</h3>
+        <p>Paste a link, or fill in Wi-Fi, contact or message details. The code appears as you type.</p>
+      </li>
+      <li>
+        <h3>Make it yours</h3>
+        <p>Pick colours, a pattern, rounded corners or add your logo. We check it still scans after every change.</p>
+      </li>
+      <li>
+        <h3>Download</h3>
+        <p>PNG for screens, SVG for print. No account, no watermark, and the code never expires.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="private wrap" aria-labelledby="priv-h">
+    <div class="priv-card">
+      <h2 id="priv-h">Your QR code is generated in your browser.</h2>
+      <p>Links, Wi-Fi passwords and contact details never touch our servers. Scanning works the same way: your camera feed and images stay on your device.</p>
+      <a href="/privacy">How we handle data</a>
+    </div>
+  </section>
+
+  <div class="wrap faq-wrap">
+    <FAQSection faqs={faqs} />
+  </div>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--s-5);
+    padding-block: var(--s-3) var(--s-7);
+  }
+  .copy {
+    display: grid;
+    gap: var(--s-3);
+    max-width: 44rem;
+  }
+  h1 {
+    font-size: clamp(2.5rem, 1.5rem + 4.6vw, 5rem);
+    max-width: 14ch;
+  }
+  .lede {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    max-width: 40ch;
+  }
+  .tools {
+    margin-top: var(--s-6);
+  }
+  .tools h2,
+  .how h2 {
+    margin-bottom: var(--s-5);
+  }
+  .how {
+    margin-top: var(--s-9);
+  }
+  .how ol {
+    list-style: none;
+    counter-reset: step;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-5);
+  }
+  @media (min-width: 760px) {
+    .how ol {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .how li {
+    counter-increment: step;
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+  }
+  .how li::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--mark);
+    font: 700 var(--step-1) / 1 var(--font-display);
+    margin-bottom: var(--s-2);
+  }
+  .how p {
+    color: var(--ink-soft);
+  }
+  .private {
+    margin-top: var(--s-9);
+  }
+  .priv-card {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-7) var(--s-6);
+    border-radius: var(--r-xl);
+    background: var(--ink);
+    color: #d6d8e0;
+  }
+  .priv-card h2 {
+    color: #fff;
+    max-width: 18ch;
+  }
+  .priv-card p {
+    max-width: 52ch;
+    font-size: var(--step-1);
+  }
+  .priv-card a {
+    color: var(--mark);
+    font-weight: 700;
+  }
+  .priv-card a:hover {
+    color: #fff;
+  }
+  .priv-card :focus-visible {
+    outline-color: var(--mark);
+  }
+  @media (max-width: 599px) {
+    .priv-card {
+      padding: var(--s-6) var(--s-5);
+    }
+  }
+  .faq-wrap {
+    margin-top: var(--s-9);
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    margin-inline: 0 auto;
+  }
+  @media (min-width: 1180px) {
+    .faq-wrap {
+      margin-inline: auto;
+      max-width: var(--page);
+    }
+    .faq-wrap :global(.faq) {
+      max-width: var(--measure);
+    }
+  }
+</style>

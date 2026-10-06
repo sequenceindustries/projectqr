@@ -1,0 +1,142 @@
+---
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<div class="pv">
+  <div class="frame finder">
+    <div class="stage" data-preview role="img" aria-label="QR code preview">
+      <div class="ph" data-placeholder>
+        <svg viewBox="0 0 29 29" aria-hidden="true">
+          <path fill-rule="evenodd" d="M0 0h7v7H0ZM1 1v5h5V1ZM2 2h3v3H2ZM22 0h7v7h-7ZM23 1v5h5V1ZM24 2h3v3h-3ZM0 22h7v7H0ZM1 23v5h5v-5ZM2 24h3v3H2Z" />
+          <g opacity="0.35">
+            <rect x="9" y="1" width="2" height="2" /><rect x="13" y="3" width="2" height="2" /><rect x="17" y="1" width="2" height="2" />
+            <rect x="9" y="9" width="2" height="2" /><rect x="15" y="11" width="2" height="2" /><rect x="21" y="9" width="2" height="2" />
+            <rect x="1" y="13" width="2" height="2" /><rect x="5" y="17" width="2" height="2" /><rect x="11" y="15" width="2" height="2" />
+            <rect x="19" y="17" width="2" height="2" /><rect x="25" y="13" width="2" height="2" /><rect x="13" y="21" width="2" height="2" />
+            <rect x="17" y="25" width="2" height="2" /><rect x="23" y="23" width="2" height="2" /><rect x="9" y="25" width="2" height="2" />
+          </g>
+        </svg>
+        <p>Your QR code will appear here</p>
+      </div>
+    </div>
+  </div>
+  {caption && <p class="caption" data-caption hidden>{caption}</p>}
+  <p class="status" data-check aria-live="polite"></p>
+  <div class="warnings" data-warnings aria-live="polite"></div>
+  <p class="meta" data-meta></p>
+</div>
+
+<style>
+  .pv {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .frame {
+    --f-inset: -12px;
+    margin: 12px;
+  }
+  .stage {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    width: 100%;
+    border-radius: var(--r-md);
+    background: var(--surface);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .stage :global(svg.qr) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .stage.is-stale :global(svg.qr) {
+    opacity: 0.25;
+    filter: grayscale(1);
+    transition: opacity 0.15s;
+  }
+  .ph {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-3);
+    padding: var(--s-5);
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .ph svg {
+    width: 38%;
+    fill: var(--line-strong);
+  }
+  .ph p {
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .caption {
+    text-align: center;
+    font: 700 var(--step-1) / 1.2 var(--font-display);
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 1.6em;
+    font-size: var(--step--1);
+    font-weight: 650;
+    text-align: center;
+  }
+  .status:empty {
+    display: none;
+  }
+  .status[data-state='ok'] {
+    color: var(--ok);
+  }
+  .status[data-state='fail'] {
+    color: var(--err);
+  }
+  .status[data-state='checking'] {
+    color: var(--ink-faint);
+  }
+  .status::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex: none;
+    border-radius: 50%;
+  }
+  .status[data-state='ok']::before {
+    background: var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100%;
+  }
+  .status[data-state='fail']::before {
+    background: var(--err) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 5l6 6M11 5l-6 6' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center / 100%;
+  }
+  .status[data-state='checking']::before {
+    border: 2px solid var(--line-strong);
+    border-top-color: var(--ink);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .warnings {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .warnings:empty {
+    display: none;
+  }
+  .meta {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta:empty {
+    display: none;
+  }
+</style>

@@ -1,0 +1,184 @@
+---
+import Base from '../layouts/Base.astro';
+import QRCodeGenerator from './QRCodeGenerator.astro';
+import QRCodeScanner from './QRCodeScanner.astro';
+import QRCodeReader from './QRCodeReader.astro';
+import BatchQRGenerator from './BatchQRGenerator.astro';
+import FAQSection from './FAQSection.astro';
+import RelatedTools from './RelatedTools.astro';
+import ToolPrompts from './ToolPrompts.astro';
+import AdSlot from './AdSlot.astro';
+import type { Tool } from '../data/tools';
+
+interface Props {
+  tool: Tool;
+}
+const { tool } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}/${tool.slug}`;
+const ui = tool.ui;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: tool.name,
+    url,
+    description: tool.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@type': 'Organization', name: 'Sequence Industries' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: tool.howTo.title,
+    step: tool.howTo.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, text: s })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: tool.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'QR Tools', item: `${site}/` },
+      { '@type': 'ListItem', position: 2, name: tool.name, item: url },
+    ],
+  },
+];
+---
+
+<Base title={tool.title} description={tool.description} path={`/${tool.slug}`} jsonLd={jsonLd}>
+  <div class="wrap">
+    <header class="intro">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">QR Tools</a></nav>
+      <h1>{tool.h1}</h1>
+      <p>{tool.intro}</p>
+    </header>
+
+    {
+      ui.kind === 'generator' ? (
+        <QRCodeGenerator tool={tool.slug} types={ui.types} type={ui.type} design={ui.design} caption={ui.caption} action={ui.action} />
+      ) : ui.kind === 'scanner' ? (
+        <QRCodeScanner tool={tool.slug} mode="scanner" />
+      ) : ui.kind === 'reader' ? (
+        <QRCodeReader tool={tool.slug} />
+      ) : (
+        <BatchQRGenerator tool={tool.slug} />
+      )
+    }
+
+    <div class="prompts">
+      <ToolPrompts prompts={tool.prompts} />
+    </div>
+  </div>
+
+  <div class="wrap content">
+    <section class="howto" aria-labelledby="howto-h">
+      <h2 id="howto-h">{tool.howTo.title}</h2>
+      <ol>{tool.howTo.steps.map((s) => <li>{s}</li>)}</ol>
+    </section>
+
+    {
+      tool.explainer.map((e) => (
+        <section class="explain">
+          <h2>{e.heading}</h2>
+          {e.body.map((p) => (
+            <p>{p}</p>
+          ))}
+        </section>
+      ))
+    }
+
+    <FAQSection faqs={tool.faqs} />
+  </div>
+
+  <AdSlot name="tool-bottom" />
+
+  <div class="wrap rel">
+    <RelatedTools slugs={tool.related} />
+  </div>
+</Base>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--s-3);
+    padding-block: var(--s-4) var(--s-6);
+    max-width: 48rem;
+  }
+  .crumbs a {
+    font-weight: 650;
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .crumbs a::before {
+    content: '←';
+    margin-right: 6px;
+  }
+  .intro h1 {
+    font-size: clamp(2.2rem, 1.5rem + 3.2vw, 3.9rem);
+  }
+  .intro p {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    max-width: 56ch;
+  }
+  .prompts {
+    margin-top: var(--s-6);
+  }
+  .content {
+    display: grid;
+    gap: var(--s-8);
+    margin-top: var(--s-8);
+  }
+  .content > :global(section) {
+    max-width: var(--measure);
+  }
+  .content h2 {
+    margin-bottom: var(--s-4);
+  }
+  .explain p + p {
+    margin-top: var(--s-4);
+  }
+  .explain p {
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .howto ol {
+    list-style: none;
+    counter-reset: s;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+  .howto li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: var(--s-3);
+    align-items: baseline;
+  }
+  .howto li::before {
+    content: counter(s);
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--ink);
+    color: var(--mark);
+    font: 700 var(--step-0) / 1 var(--font-display);
+    transform: translateY(6px);
+  }
+  .rel {
+    margin-top: var(--s-8);
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import { QR_TYPES, type QrType } from '../../shared/qr/payload';
+interface Props {
+  id: string;
+  types: QrType[];
+  value: QrType;
+}
+const { id, types, value } = Astro.props;
+const list = QR_TYPES.filter((t) => types.includes(t.id));
+---
+
+<fieldset class="types">
+  <legend class="label">What do you want your QR code to contain?</legend>
+  <div class="type-list">
+    {
+      list.map((t) => (
+        <label>
+          <input type="radio" name={`${id}-type`} value={t.id} checked={t.id === value} data-type-radio />
+          <span>{t.label}</span>
+        </label>
+      ))
+    }
+  </div>
+</fieldset>
+
+<style>
+  .types {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .types legend {
+    padding: 0;
+    margin-bottom: var(--s-3);
+    font-size: var(--step-0);
+    color: var(--ink);
+    font-weight: 650;
+  }
+  .type-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+  }
+  @media (min-width: 560px) {
+    .type-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+  label {
+    position: relative;
+  }
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1.5px var(--line-strong);
+    font-weight: 650;
+    font-size: var(--step--1);
+    white-space: nowrap;
+    transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+  }
+  label:hover span {
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+  input:checked + span {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: inset 0 -3px 0 var(--mark);
+  }
+  input:focus-visible + span {
+    outline: 3px solid var(--signal);
+    outline-offset: 2px;
+  }
+</style>

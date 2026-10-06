@@ -1,0 +1,127 @@
+---
+import Logo from './Logo.astro';
+import { tools } from '../data/tools';
+const current = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label="QR Tools home">
+      <Logo />
+      <span>QR Tools</span>
+    </a>
+    <nav class="quick" aria-label="Main">
+      <a href="/qr-code-generator" aria-current={current === '/qr-code-generator' ? 'page' : undefined}>Generator</a>
+      <a href="/qr-code-scanner" aria-current={current === '/qr-code-scanner' ? 'page' : undefined}>Scanner</a>
+    </nav>
+    <details class="menu">
+      <summary class="btn btn--quiet btn--small">All tools</summary>
+      <nav aria-label="All tools">
+        <ul>
+          {
+            tools.map((t) => (
+              <li>
+                <a href={`/${t.slug}`} aria-current={current === `/${t.slug}` ? 'page' : undefined}>
+                  <strong>{t.name}</strong>
+                  <span>{t.blurb}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 5;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    min-height: 72px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-right: auto;
+    color: var(--ink);
+    text-decoration: none;
+    font: 750 1.3rem/1 var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  .quick {
+    display: none;
+    gap: var(--s-1);
+  }
+  @media (min-width: 720px) {
+    .quick {
+      display: flex;
+    }
+  }
+  .quick a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    border-radius: var(--r-pill);
+    color: var(--ink);
+    font-weight: 650;
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .quick a:hover,
+  .quick a[aria-current='page'] {
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  }
+  .menu {
+    position: relative;
+  }
+  .menu summary {
+    list-style: none;
+  }
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + var(--s-2));
+    width: min(340px, calc(100vw - 2 * var(--gutter)));
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding: var(--s-2);
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--lift-hi);
+  }
+  .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .menu a {
+    display: grid;
+    gap: 1px;
+    padding: var(--s-2) var(--s-3);
+    border-radius: var(--r-sm);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .menu a span {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .menu a:hover,
+  .menu a[aria-current='page'] {
+    background: #f0fbd0;
+  }
+</style>

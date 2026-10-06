@@ -1,0 +1,97 @@
+---
+/** Small, consistent illustrations: a QR tile and what each tool does with it. */
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const ink = '#13151f';
+const lime = '#c6f432';
+const n = (v: number) => +v.toFixed(2);
+const eye = (x: number, y: number, s = 1) =>
+  `M${n(x)} ${n(y)}h${n(7 * s)}v${n(7 * s)}h${n(-7 * s)}ZM${n(x + s)} ${n(y + s)}v${n(5 * s)}h${n(5 * s)}v${n(-5 * s)}ZM${n(x + 2 * s)} ${n(y + 2 * s)}h${n(3 * s)}v${n(3 * s)}h${n(-3 * s)}Z`;
+const mini = (x: number, y: number, s: number) => `${eye(x, y, s)}${eye(x + 14 * s, y, s)}${eye(x, y + 14 * s, s)}`;
+---
+
+<svg class="tool-icon" viewBox="0 0 96 72" aria-hidden="true" focusable="false">
+  {
+    slug === 'qr-code-generator' && (
+      <g>
+        <path d={mini(26, 14, 2)} fill={ink} fill-rule="evenodd" />
+        <g fill={ink}>
+          <rect x="44" y="16" width="4" height="4" /><rect x="48" y="24" width="4" height="4" /><rect x="40" y="32" width="4" height="4" />
+          <rect x="56" y="36" width="4" height="4" /><rect x="48" y="44" width="4" height="4" /><rect x="60" y="50" width="4" height="4" />
+          <rect x="30" y="34" width="4" height="4" />
+        </g>
+        <rect x="58" y="42" width="6" height="6" fill={lime} stroke={ink} stroke-width="1.5" />
+      </g>
+    )
+  }
+  {
+    slug === 'qr-code-scanner' && (
+      <g>
+        <rect x="30" y="6" width="36" height="60" rx="7" fill="#fff" stroke={ink} stroke-width="2.5" />
+        <path d={mini(37, 20, 1.3)} fill={ink} fill-rule="evenodd" />
+        <path d="M34 36h28" stroke={lime} stroke-width="3" stroke-linecap="round" />
+        <path d="M36 18v-4h4M60 18v-4h-4M36 54v4h4M60 54v4h-4" fill="none" stroke={ink} stroke-width="2" stroke-linecap="round" />
+      </g>
+    )
+  }
+  {
+    slug === 'qr-code-reader' && (
+      <g>
+        <rect x="14" y="10" width="46" height="46" rx="6" fill="#fff" stroke={ink} stroke-width="2.5" />
+        <path d={mini(20, 16, 1.3)} fill={ink} fill-rule="evenodd" />
+        <circle cx="62" cy="48" r="13" fill={lime} stroke={ink} stroke-width="2.5" />
+        <path d="M71 57l9 9" stroke={ink} stroke-width="4" stroke-linecap="round" />
+        <path d="M56 48h12M56 44h8M56 52h10" stroke={ink} stroke-width="1.8" stroke-linecap="round" />
+      </g>
+    )
+  }
+  {
+    slug === 'wifi-qr-code' && (
+      <g fill="none" stroke={ink} stroke-linecap="round">
+        <path d="M26 30a31 31 0 0 1 44 0" stroke-width="4" />
+        <path d="M33 38a21 21 0 0 1 30 0" stroke-width="4" />
+        <path d="M40 46a11 11 0 0 1 16 0" stroke-width="4" />
+        <circle cx="48" cy="54" r="4" fill={lime} stroke-width="2.5" />
+      </g>
+    )
+  }
+  {
+    slug === 'vcard-qr-code' && (
+      <g>
+        <rect x="12" y="14" width="72" height="44" rx="7" fill="#fff" stroke={ink} stroke-width="2.5" />
+        <circle cx="30" cy="31" r="7" fill={lime} stroke={ink} stroke-width="2" />
+        <path d="M20 48c2-6 6-8 10-8s8 2 10 8" fill="none" stroke={ink} stroke-width="2" stroke-linecap="round" />
+        <path d={eye(52, 24, 1.3) + eye(66, 24, 1.3) + eye(52, 38, 1.3)} fill={ink} fill-rule="evenodd" />
+      </g>
+    )
+  }
+  {
+    slug === 'custom-qr-code' && (
+      <g>
+        <path d="M24 12h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4ZM25 17v12h12V17Z" fill={ink} fill-rule="evenodd" />
+        <circle cx="31" cy="23" r="3.2" fill={ink} />
+        <g fill={ink}>
+          <circle cx="50" cy="16" r="2.6" /><circle cx="58" cy="16" r="2.6" /><circle cx="66" cy="24" r="2.6" /><circle cx="74" cy="16" r="2.6" />
+          <circle cx="26" cy="44" r="2.6" /><circle cx="34" cy="52" r="2.6" /><circle cx="26" cy="60" r="2.6" /><circle cx="74" cy="56" r="2.6" />
+          <circle cx="66" cy="62" r="2.6" />
+        </g>
+        <rect x="44" y="30" width="18" height="18" rx="5" fill={lime} stroke={ink} stroke-width="2.5" />
+        <path d="M49 39l3 3 6-6" fill="none" stroke={ink} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+    )
+  }
+  {
+    slug === 'batch-qr-code' && (
+      <g>
+        <rect x="30" y="8" width="38" height="38" rx="5" fill="#fff" stroke={ink} stroke-width="2" opacity="0.5" />
+        <rect x="24" y="15" width="38" height="38" rx="5" fill="#fff" stroke={ink} stroke-width="2" opacity="0.75" />
+        <rect x="18" y="22" width="38" height="38" rx="5" fill="#fff" stroke={ink} stroke-width="2.5" />
+        <path d={mini(23, 27, 1.2)} fill={ink} fill-rule="evenodd" />
+        <rect x="64" y="40" width="20" height="24" rx="3" fill={lime} stroke={ink} stroke-width="2.2" />
+        <path d="M74 40v6M71 46h6M74 52v4" stroke={ink} stroke-width="2" />
+      </g>
+    )
+  }
+</svg>

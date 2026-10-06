@@ -1,0 +1,92 @@
+---
+import Logo from './Logo.astro';
+import { tools } from '../data/tools';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="about">
+      <a class="brand" href="/"><Logo size={26} light /> QR Tools</a>
+      <p>The fastest way to create, customise and read QR codes. Free, no account, and everything happens in your browser.</p>
+    </div>
+    <nav aria-label="QR tools">
+      <h2 class="h">Tools</h2>
+      <ul>{tools.map((t) => <li><a href={`/${t.slug}`}>{t.name}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Site">
+      <h2 class="h">QR Tools</h2>
+      <ul class="one">
+        <li><a href="/about">About</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap legal">
+    <p>© {year} Sequence Industries. QR Code is a registered trademark of DENSO WAVE INCORPORATED.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--s-9);
+    padding-block: var(--s-8) var(--s-6);
+    background: var(--ink);
+    color: #c9cbd4;
+  }
+  .grid {
+    display: grid;
+    gap: var(--s-7);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 760px) {
+    .grid {
+      grid-template-columns: 1.4fr 1.4fr 0.7fr;
+    }
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    color: #fff;
+    text-decoration: none;
+    font: 750 1.2rem/1 var(--font-display);
+    margin-bottom: var(--s-4);
+  }
+  .about p {
+    max-width: 38ch;
+  }
+  .h {
+    font: 650 var(--step-0) / 1.2 var(--font-display);
+    color: #fff;
+    margin-bottom: var(--s-3);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: var(--s-5);
+  }
+  ul.one {
+    columns: 1;
+  }
+  li a {
+    display: inline-block;
+    padding-block: 6px;
+    color: #c9cbd4;
+    text-decoration: none;
+  }
+  li a:hover {
+    color: var(--mark);
+  }
+  .legal {
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    font-size: var(--step--1);
+  }
+  .site-footer :focus-visible {
+    outline-color: var(--mark);
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+import ToolGrid from './ToolGrid.astro';
+import { toolBySlug } from '../data/tools';
+interface Props {
+  slugs: string[];
+}
+const { slugs } = Astro.props;
+const list = slugs.map((s) => toolBySlug.get(s)!).filter(Boolean);
+---
+
+<section class="related" aria-labelledby="rel-h">
+  <h2 id="rel-h">Related tools</h2>
+  <ToolGrid tools={list} />
+</section>
+
+<style>
+  .related h2 {
+    margin-bottom: var(--s-5);
+  }
+</style>
