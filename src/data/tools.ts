@@ -373,7 +373,7 @@ export const tools: Tool[] = [
     blurb: 'Create product labels and inventory codes.',
     h1: 'Free barcode generator',
     title: 'Free Barcode Generator — Code 128, EAN & UPC | Code Generator',
-    description: 'Create and download barcodes for products, stock and labels. Supports Code 128, EAN-13, UPC-A, EAN-8, Code 39 and ITF-14. Free and private.',
+    description: 'Create and download barcodes for products, stock and labels. Supports Code 128, EAN-13, UPC-A, EAN-8, Code 39, ITF-14 and Data Matrix. Free and private.',
     intro: 'Make a barcode for a product, package or inventory label. Choose a format, enter your value and download a crisp SVG or PNG.',
     ui: { kind: 'barcode' },
     howTo: {
@@ -389,7 +389,7 @@ export const tools: Tool[] = [
       {
         heading: 'Pick the format that matches your use',
         body: [
-          'Code 128 works well for general labels, stock numbers and mixed letters and digits. EAN-13 and UPC-A are common retail product formats; EAN-8 is a compact retail option. Code 39 and ITF-14 are often used for inventory and shipping labels.',
+          'Code 128 works well for general labels, stock numbers and mixed letters and digits. EAN-13 and UPC-A are common retail product formats; EAN-8 is a compact retail option. Code 39 and ITF-14 are often used for inventory and shipping labels. Data Matrix is a compact two-dimensional symbol used for product traceability, inventory and healthcare identification.',
           'Retail barcodes must use numbers assigned to your business and meet retailer requirements. Creating a barcode image does not register a product number or guarantee that a retailer will accept it.',
         ],
       },
@@ -399,7 +399,7 @@ export const tools: Tool[] = [
       },
     ],
     faqs: [
-      { q: 'Which barcode format should I use?', a: 'Use the format required by your product, warehouse or retailer. Code 128 is flexible for labels; EAN-13 and UPC-A are widely used in retail.' },
+      { q: 'Which barcode format should I use?', a: 'Use the format required by your product, warehouse or retailer. Code 128 is flexible for labels; EAN-13 and UPC-A are widely used in retail; Data Matrix is useful when you need to fit more data in a small space.' },
       { q: 'Can I use any number for a retail barcode?', a: 'A generated image does not register a product number. Retailers may require a valid number assigned to your business by the relevant standards body.' },
       { q: 'What files can I download?', a: 'Download an SVG for sharp printing and editing, or a PNG for documents and screens.' },
       { q: 'Is my barcode data uploaded?', a: 'No. The barcode is generated in your browser and the value stays on your device.' },

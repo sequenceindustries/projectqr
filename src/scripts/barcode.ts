@@ -1,4 +1,5 @@
 import JsBarcode from 'jsbarcode';
+import bwipjs from 'bwip-js';
 
 const formats: Record<string, string> = {
   CODE128: 'Code 128',
@@ -7,6 +8,7 @@ const formats: Record<string, string> = {
   EAN8: 'EAN-8',
   CODE39: 'Code 39',
   ITF14: 'ITF-14',
+  DATAMATRIX: 'Data Matrix',
 };
 
 export function mountBarcodeGenerators() {
@@ -26,6 +28,10 @@ export function mountBarcodeGenerators() {
       const value = valueField.value.trim();
       const format = formatField.value;
       svg.replaceChildren();
+      svg.removeAttribute('viewBox');
+      svg.removeAttribute('preserveAspectRatio');
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
       error.hidden = true;
       downloads.forEach((button) => (button.disabled = true));
       if (!value) {
@@ -34,6 +40,26 @@ export function mountBarcodeGenerators() {
         return false;
       }
       try {
+        if (format === 'DATAMATRIX') {
+          const output = bwipjs.toSVG({
+            bcid: 'datamatrix',
+            text: value,
+            scale: 4,
+            padding: 12,
+            backgroundcolor: 'FFFFFF',
+            barcolor: '13151F',
+          });
+          const parsed = new DOMParser().parseFromString(output, 'image/svg+xml').documentElement;
+          svg.setAttribute('viewBox', parsed.getAttribute('viewBox') ?? '0 0 160 160');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.setAttribute('width', parsed.getAttribute('width') ?? '160');
+          svg.setAttribute('height', parsed.getAttribute('height') ?? '160');
+          svg.innerHTML = parsed.innerHTML;
+          name.textContent = formats[format];
+          svg.setAttribute('aria-label', `${formats[format]} preview for ${value}`);
+          downloads.forEach((button) => (button.disabled = false));
+          return true;
+        }
         JsBarcode(svg, value, {
           format,
           width: 2,

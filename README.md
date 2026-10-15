@@ -16,7 +16,7 @@ Part of the Sequence Industries utility portfolio. Built with Astro and a small 
 | `/qr-code-scanner` | Scan QR codes with a camera or image |
 | `/qr-code-reader` | Read QR codes from an image |
 | `/batch-qr-code` | Create up to 500 QR codes from a CSV |
-| `/barcode-generator` | Create Code 128, EAN-13/8, UPC-A, Code 39 and ITF-14 barcodes |
+| `/barcode-generator` | Create Code 128, EAN-13/8, UPC-A, Code 39, ITF-14 and Data Matrix barcodes |
 
 QR downloads include PNG, SVG, JPG and clipboard copy. Barcode downloads include SVG and PNG.
 
