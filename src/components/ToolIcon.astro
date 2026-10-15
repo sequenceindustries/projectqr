@@ -22,6 +22,16 @@ const mini = (x: number, y: number, s: number) => `${eye(x, y, s)}${eye(x + 14 *
     )
   }
   {
+    slug === 'password-generator' && (
+      <g>
+        <rect x="22" y="32" width="52" height="34" rx="7" fill="#fff" stroke={ink} stroke-width="3" />
+        <path d="M32 32v-9a16 16 0 0 1 32 0v9" fill="none" stroke={ink} stroke-width="4" stroke-linecap="round" />
+        <circle cx="48" cy="48" r="4" fill={lime} stroke={ink} stroke-width="2" />
+        <path d="M48 51v6" stroke={ink} stroke-width="2.5" stroke-linecap="round" />
+      </g>
+    )
+  }
+  {
     slug === 'qr-code-generator' && (
       <g>
         <path d={mini(26, 14, 2)} fill={ink} fill-rule="evenodd" />

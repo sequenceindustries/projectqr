@@ -14,6 +14,7 @@ export interface Faq {
 export type ToolUi =
   | { kind: 'generator'; types?: QrType[]; type?: QrType; design?: 'closed' | 'open' | 'inline'; caption?: string; action?: string }
   | { kind: 'barcode' }
+  | { kind: 'password' }
   | { kind: 'scanner' }
   | { kind: 'reader' }
   | { kind: 'batch' };
@@ -408,6 +409,45 @@ export const tools: Tool[] = [
     prompts: [
       { q: 'Need a QR code instead?', slug: 'qr-code-generator' },
       { q: 'Want to create many QR codes?', slug: 'batch-qr-code' },
+    ],
+  },
+  {
+    slug: 'password-generator',
+    name: 'Password Generator',
+    blurb: 'Make a strong random password on your device.',
+    h1: 'Free password generator',
+    title: 'Secure Password Generator — Free & Private | Code Generator',
+    description: 'Generate a strong random password in your browser. Choose length and character types, then copy it. Nothing is uploaded or stored.',
+    intro: 'Create a unique random password on your device. Choose its length and character types, then copy it straight into your password manager.',
+    ui: { kind: 'password' },
+    howTo: {
+      title: 'How to generate a password',
+      steps: [
+        'Choose a password length and which character types to include.',
+        'Generate a password using your browser’s secure random generator.',
+        'Copy it directly into your password manager and save it there.',
+      ],
+    },
+    explainer: [
+      {
+        heading: 'Generated on your device',
+        body: ['Password characters are created in your browser with the Web Crypto API. The password is not sent to us, saved by this site or included in analytics.'],
+      },
+      {
+        heading: 'Use a password manager',
+        body: ['Use a different password for every account and store it in a trusted password manager. This tool creates passwords; it does not save or recover them. Avoid using a password generated on a shared or monitored device.'],
+      },
+    ],
+    faqs: [
+      { q: 'Are passwords sent to a server?', a: 'No. Passwords are generated in your browser using its secure random generator and are not uploaded or stored by this site.' },
+      { q: 'How long should my password be?', a: 'Longer is generally better. This tool supports up to 64 characters; use the longest length accepted by the account or service.' },
+      { q: 'Does this tool save my password?', a: 'No. Copy the password into your password manager before leaving the page. The site does not keep a copy.' },
+      { q: 'Can I use this for an important account?', a: 'Use a trusted device and copy the result into a reputable password manager. This simple generator does not audit your device or manage passwords.' },
+    ],
+    related: ['qr-code-generator', 'barcode-generator'],
+    prompts: [
+      { q: 'Need a QR code?', slug: 'qr-code-generator' },
+      { q: 'Need a product barcode?', slug: 'barcode-generator' },
     ],
   },
 ];

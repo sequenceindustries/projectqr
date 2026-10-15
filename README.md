@@ -1,6 +1,6 @@
 # Code Generator
 
-**Create QR codes and barcodes in one free, browser-based toolkit.** No account required. Code values stay on your device.
+**Create QR codes, barcodes and passwords in one free, browser-based toolkit.** No account required. Your values stay on your device.
 
 Part of the Sequence Industries utility portfolio. Built with Astro and a small Fastify service for static hosting and anonymous usage events.
 
@@ -17,6 +17,7 @@ Part of the Sequence Industries utility portfolio. Built with Astro and a small 
 | `/qr-code-reader` | Read QR codes from an image |
 | `/batch-qr-code` | Create up to 500 QR codes from a CSV |
 | `/barcode-generator` | Create Code 128, EAN-13/8, UPC-A, Code 39, ITF-14 and Data Matrix barcodes |
+| `/password-generator` | Generate a secure random password locally with custom length and character types |
 
 QR downloads include PNG, SVG, JPG and clipboard copy. Barcode downloads include SVG and PNG.
 

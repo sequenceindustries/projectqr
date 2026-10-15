@@ -8,11 +8,12 @@ import AdSlot from '../components/AdSlot.astro';
 import { tools } from '../data/tools';
 
 const site = Astro.site!.toString().replace(/\/$/, '');
-const qrTools = tools.filter((tool) => tool.slug !== 'barcode-generator');
 const barcodeTools = tools.filter((tool) => tool.slug === 'barcode-generator');
+const passwordTools = tools.filter((tool) => tool.slug === 'password-generator');
+const qrTools = tools.filter((tool) => !['barcode-generator', 'password-generator'].includes(tool.slug));
 const faqs = [
   { q: 'Is Code Generator free?', a: 'Yes. The code tools are free to use, with no account or watermark.' },
-  { q: 'Is my data private?', a: 'QR codes and barcodes are created in your browser. Values you enter are not uploaded or stored.' },
+  { q: 'Is my data private?', a: 'QR codes, barcodes and passwords are created in your browser. Values you enter are not uploaded or stored.' },
   { q: 'Which format should I download?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size. JPG is there if a tool needs it.' },
   { q: 'Which barcode formats are available?', a: 'Create Code 128, EAN-13, UPC-A, EAN-8, Code 39, ITF-14 and Data Matrix codes. Choose the format required by your product, warehouse or retailer.' },
   { q: 'Will QR codes work on phones?', a: 'Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
@@ -75,6 +76,14 @@ const jsonLd = [
     <ToolGrid tools={barcodeTools} flagship="barcode-generator" />
   </section>
 
+  <section class="tools wrap" aria-labelledby="passwords-h">
+    <div class="section-heading">
+      <div><p class="eyebrow">Private, on-device tools</p><h2 id="passwords-h">Password tools</h2></div>
+      <a href="/password-generator">Open password generator <span aria-hidden="true">→</span></a>
+    </div>
+    <ToolGrid tools={passwordTools} flagship="password-generator" />
+  </section>
+
   <AdSlot name="home-mid" />
 
   <section class="how wrap" aria-labelledby="how-h">
@@ -98,7 +107,7 @@ const jsonLd = [
   <section class="private wrap" aria-labelledby="priv-h">
     <div class="priv-card">
       <h2 id="priv-h">Your code data stays on your device.</h2>
-      <p>QR codes and barcodes are created in your browser. Values you enter are never uploaded or stored.</p>
+      <p>QR codes, barcodes and passwords are created in your browser. Values you enter are never uploaded or stored.</p>
       <a href="/privacy">How we handle data</a>
     </div>
   </section>

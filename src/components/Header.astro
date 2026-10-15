@@ -13,6 +13,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
     <nav class="quick" aria-label="Main">
       <a href="/qr-code-generator" aria-current={current.startsWith('/qr') ? 'page' : undefined}>QR codes</a>
       <a href="/barcode-generator" aria-current={current === '/barcode-generator' ? 'page' : undefined}>Barcodes</a>
+      <a href="/password-generator" aria-current={current === '/password-generator' ? 'page' : undefined}>Passwords</a>
       <a href="/qr-code-scanner" aria-current={current.includes('scanner') || current.includes('reader') ? 'page' : undefined}>Scan</a>
     </nav>
     <details class="menu">
