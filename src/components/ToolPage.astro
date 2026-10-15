@@ -6,6 +6,7 @@ import QRCodeReader from './QRCodeReader.astro';
 import BatchQRGenerator from './BatchQRGenerator.astro';
 import BarcodeGenerator from './BarcodeGenerator.astro';
 import PasswordGenerator from './PasswordGenerator.astro';
+import WordSearchMaker from './WordSearchMaker.astro';
 import FAQSection from './FAQSection.astro';
 import RelatedTools from './RelatedTools.astro';
 import ToolPrompts from './ToolPrompts.astro';
@@ -75,6 +76,8 @@ const jsonLd = [
         <BarcodeGenerator />
       ) : ui.kind === 'password' ? (
         <PasswordGenerator />
+      ) : ui.kind === 'word-search' ? (
+        <WordSearchMaker />
       ) : (
         <BatchQRGenerator tool={tool.slug} />
       )

@@ -1,0 +1,94 @@
+<section class="wordsearch" data-wordsearch aria-label="Word search puzzle maker">
+  <div class="card controls">
+    <label class="label" for="word-list">Your words</label>
+    <textarea id="word-list" data-word-list class="field" rows="10" spellcheck="false" placeholder="PLANET\nORBIT\nROCKET\nGALAXY\nCOMET">PLANET
+ORBIT
+ROCKET
+GALAXY
+COMET
+ASTRONAUT
+MOON</textarea>
+    <p class="hint">One word per line, up to 20 words. Spaces and punctuation are removed.</p>
+
+    <label class="label" for="grid-size">Grid size</label>
+    <select id="grid-size" data-grid-size class="field">
+      <option value="10">10 × 10 — Easy</option>
+      <option value="12">12 × 12</option>
+      <option value="15" selected>15 × 15 — Standard</option>
+      <option value="18">18 × 18</option>
+      <option value="20">20 × 20 — Large</option>
+    </select>
+
+    <fieldset>
+      <legend class="label">Word directions</legend>
+      <label class="option"><input type="checkbox" data-diagonal checked /> Allow diagonal words</label>
+      <label class="option"><input type="checkbox" data-backwards checked /> Allow backwards words</label>
+    </fieldset>
+    <p class="error" data-word-error role="alert" hidden></p>
+    <button class="btn btn--primary" type="button" data-create-puzzle>Make word search</button>
+  </div>
+
+  <div class="card puzzle-card" data-puzzle-card>
+    <div class="puzzle-head">
+      <div><p class="eyebrow">Printable puzzle</p><h2>Find the words</h2></div>
+      <button class="btn btn--quiet" type="button" data-print-puzzle>Print / Save PDF</button>
+    </div>
+    <p class="puzzle-note">Find each word hidden in the grid.</p>
+    <div class="grid-scroll"><div class="puzzle-grid" data-puzzle-grid aria-label="Word search puzzle"></div></div>
+    <h3>Word list</h3>
+    <ul class="words" data-puzzle-words></ul>
+  </div>
+
+  <div class="card answer-card" data-answer-card>
+    <p class="eyebrow">Answer key · prints on a separate page</p>
+    <h2>Solution</h2>
+    <div class="grid-scroll"><div class="puzzle-grid solution-grid" data-solution-grid aria-label="Word search answer key"></div></div>
+    <ul class="answer-words" data-answer-words></ul>
+  </div>
+</section>
+
+<script>
+  import { mountWordSearchMakers } from '../scripts/word-search';
+  mountWordSearchMakers();
+</script>
+
+<style>
+  .wordsearch { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s-4); align-items:start; }
+  .card { min-width:0; padding:var(--s-5); border-radius:var(--r-lg); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line),var(--lift); }
+  .controls { display:grid; gap:var(--s-3); align-content:start; }
+  .label { font-weight:700; }
+  .field { width:100%; min-height:46px; padding:.7rem .85rem; border:1px solid var(--line-strong); border-radius:var(--r-sm); background:#fff; color:var(--ink); font:inherit; }
+  textarea.field { resize:vertical; line-height:1.55; }
+  .field:focus-visible { outline:3px solid var(--signal-wash); border-color:var(--signal); }
+  .hint,.puzzle-note { margin:-.3rem 0 var(--s-2); color:var(--ink-soft); font-size:var(--step--1); }
+  fieldset { display:grid; gap:var(--s-1); margin:0; padding:0; border:0; }
+  fieldset legend { margin-bottom:var(--s-1); }
+  .option { display:flex; gap:var(--s-2); align-items:center; min-height:40px; }
+  .option input { width:18px; height:18px; accent-color:var(--signal); }
+  .error { margin:0; color:var(--err); font-weight:650; }
+  .puzzle-card,.answer-card { display:grid; gap:var(--s-3); }
+  .puzzle-head { display:flex; justify-content:space-between; gap:var(--s-2); align-items:center; }
+  .eyebrow { margin:0 0 2px; color:var(--ink-soft); font-size:var(--step--1); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  h2 { margin:0; font-size:var(--step-1); }
+  h3 { margin:var(--s-2) 0 0; }
+  .puzzle-note { margin:0; }
+  .grid-scroll { overflow-x:auto; padding:2px; }
+  .puzzle-grid { display:grid; grid-template-columns:repeat(var(--grid-size),minmax(25px,1fr)); width:min(100%,540px); margin-inline:auto; border-top:1px solid var(--line-strong); border-left:1px solid var(--line-strong); background:#fff; }
+  .puzzle-cell { display:grid; place-items:center; aspect-ratio:1; border-right:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong); color:var(--ink); font:700 clamp(.65rem,1.7vw,.95rem)/1 ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .solution-grid .puzzle-cell.is-answer { background:#e8f2af; }
+  .words,.answer-words { display:grid; grid-template-columns:repeat(auto-fit,minmax(105px,1fr)); gap:var(--s-1) var(--s-3); list-style:none; margin:0; padding:0; }
+  .words li,.answer-words li { overflow-wrap:anywhere; }
+  @media (min-width:940px) { .wordsearch { grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr); gap:var(--s-5); } .answer-card { grid-column:2; } }
+  @media print {
+    :global(.site-header), :global(footer), :global(.intro), :global(.prompts), :global(.ad-slot), :global(.content), :global(.rel), .controls, [data-print-puzzle] { display:none !important; }
+    :global(body) { background:#fff !important; color:#000 !important; }
+    :global(main) { padding:0 !important; }
+    .wordsearch { display:block; }
+    .card { padding:0; box-shadow:none; border:0; background:#fff; }
+    .puzzle-card { break-after:page; page-break-after:always; }
+    .answer-card { break-before:page; page-break-before:always; }
+    .puzzle-grid { width:min(100%,6in); }
+    .puzzle-cell { font-size:14pt; }
+    .solution-grid .puzzle-cell.is-answer { background:#dce6a4 !important; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  }
+</style>

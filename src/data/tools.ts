@@ -15,6 +15,7 @@ export type ToolUi =
   | { kind: 'generator'; types?: QrType[]; type?: QrType; design?: 'closed' | 'open' | 'inline'; caption?: string; action?: string }
   | { kind: 'barcode' }
   | { kind: 'password' }
+  | { kind: 'word-search' }
   | { kind: 'scanner' }
   | { kind: 'reader' }
   | { kind: 'batch' };
@@ -448,6 +449,40 @@ export const tools: Tool[] = [
     prompts: [
       { q: 'Need a QR code?', slug: 'qr-code-generator' },
       { q: 'Need a product barcode?', slug: 'barcode-generator' },
+    ],
+  },
+  {
+    slug: 'word-search-maker',
+    name: 'Word Search Maker',
+    blurb: 'Make a printable word search with an answer key.',
+    h1: 'Free word search maker',
+    title: 'Word Search Maker — Free Printable Puzzle | Code Generator',
+    description: 'Create a printable word search puzzle from your own word list. Choose a grid size, include diagonal and backwards words, and print with an answer key.',
+    intro: 'Turn a list of words into a printable puzzle in seconds. Choose the grid size and directions, then print the puzzle with its answer key on a separate page.',
+    ui: { kind: 'word-search' },
+    howTo: {
+      title: 'How to make a word search',
+      steps: [
+        'Enter up to 20 words, one per line.',
+        'Choose a grid size and whether words can go diagonal or backwards.',
+        'Generate the puzzle and check the word list.',
+        'Print the puzzle; the answer key is on a separate page.',
+      ],
+    },
+    explainer: [
+      { heading: 'Made for printing', body: ['Print the puzzle directly or choose “Save as PDF” in your browser’s print dialog. The answer key prints on its own page.'] },
+      { heading: 'Your words stay on your device', body: ['The puzzle is generated locally in your browser. Your word list is not uploaded or saved by this site.'] },
+    ],
+    faqs: [
+      { q: 'How many words can I add?', a: 'Add up to 20 words. Words must contain at least two letters and fit within the selected grid.' },
+      { q: 'Can words go backwards or diagonally?', a: 'Yes. You can enable diagonal and backwards directions, or keep words horizontal and vertical.' },
+      { q: 'Is there an answer key?', a: 'Yes. Print the puzzle and its answer key, which appears on a separate page.' },
+      { q: 'Are my words uploaded?', a: 'No. The word list and puzzle stay in your browser and are not saved by this site.' },
+    ],
+    related: ['password-generator', 'qr-code-generator'],
+    prompts: [
+      { q: 'Need a random password?', slug: 'password-generator' },
+      { q: 'Need a QR code?', slug: 'qr-code-generator' },
     ],
   },
 ];

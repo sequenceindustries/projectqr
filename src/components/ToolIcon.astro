@@ -32,6 +32,17 @@ const mini = (x: number, y: number, s: number) => `${eye(x, y, s)}${eye(x + 14 *
     )
   }
   {
+    slug === 'word-search-maker' && (
+      <g>
+        <rect x="18" y="9" width="60" height="54" rx="5" fill="#fff" stroke={ink} stroke-width="2.5" />
+        <path d="M30 18v36M42 18v36M54 18v36M66 18v36M24 27h48M24 39h48M24 51h48" stroke={ink} stroke-width="1.5" opacity=".45" />
+        <path d="M30 18l12 9v12l12 12h12" fill="none" stroke={lime} stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="30" cy="18" r="3" fill={lime} stroke={ink} stroke-width="1.5" />
+        <circle cx="66" cy="51" r="3" fill={lime} stroke={ink} stroke-width="1.5" />
+      </g>
+    )
+  }
+  {
     slug === 'qr-code-generator' && (
       <g>
         <path d={mini(26, 14, 2)} fill={ink} fill-rule="evenodd" />
