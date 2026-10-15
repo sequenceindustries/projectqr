@@ -13,6 +13,7 @@ export interface Faq {
 
 export type ToolUi =
   | { kind: 'generator'; types?: QrType[]; type?: QrType; design?: 'closed' | 'open' | 'inline'; caption?: string; action?: string }
+  | { kind: 'barcode' }
   | { kind: 'scanner' }
   | { kind: 'reader' }
   | { kind: 'batch' };
@@ -43,7 +44,7 @@ export const tools: Tool[] = [
     name: 'QR Code Generator',
     blurb: 'Links, text, Wi-Fi, contacts and more.',
     h1: 'Free QR code generator',
-    title: 'Free QR Code Generator — No Sign-up | QR Tools',
+    title: 'Free QR Code Generator — No Sign-up | Code Generator',
     description:
       'Create QR codes for links, text, Wi-Fi, contacts, email, phone, SMS, WhatsApp and locations. Customise and download PNG or SVG. Free, no account.',
     intro: 'Make a QR code for a link, Wi-Fi network, contact card, message and more. It appears as you type, and you can download it as PNG, SVG or JPG.',
@@ -100,7 +101,7 @@ export const tools: Tool[] = [
     name: 'QR Code Scanner',
     blurb: 'Scan with your camera or an image.',
     h1: 'QR code scanner',
-    title: 'QR Code Scanner Online — Scan with Camera | QR Tools',
+    title: 'QR Code Scanner Online — Scan with Camera | Code Generator',
     description: 'Scan QR codes with your phone or laptop camera, or upload a screenshot. See the link, Wi-Fi password or contact before you open it. Free and private.',
     intro: 'Scan a QR code with your camera, or upload, drag or paste an image of one. You see exactly what’s inside — and can check a link — before you open anything.',
     ui: { kind: 'scanner' },
@@ -146,7 +147,7 @@ export const tools: Tool[] = [
     name: 'QR Code Reader',
     blurb: 'Read a QR code from an image.',
     h1: 'QR code reader',
-    title: 'QR Code Reader — Read a QR Code from an Image | QR Tools',
+    title: 'QR Code Reader — Read a QR Code from an Image | Code Generator',
     description: 'Upload a screenshot or photo to read the QR code inside it. See the link, text, Wi-Fi details or contact, then copy or open it. Free, private, no app.',
     intro: 'Got a QR code in a screenshot, PDF export or photo? Upload it, drop it here or paste it, and read what’s inside without picking up another phone.',
     ui: { kind: 'reader' },
@@ -189,7 +190,7 @@ export const tools: Tool[] = [
     name: 'Wi-Fi QR Code',
     blurb: 'Let guests join without typing.',
     h1: 'Wi-Fi QR code generator',
-    title: 'WiFi QR Code Generator — Share Wi-Fi Instantly | QR Tools',
+    title: 'WiFi QR Code Generator — Share Wi-Fi Instantly | Code Generator',
     description: 'Make a QR code that connects guests to your Wi-Fi without typing the password. Works with iPhone and Android cameras. Free, and your password stays private.',
     intro: 'Enter your network name and password, then print or share the code. Guests point their camera at it and join — no spelling out passwords.',
     ui: { kind: 'generator', types: ['wifi'], type: 'wifi', caption: 'Scan to connect to Wi-Fi', action: 'Generate Wi-Fi QR code' },
@@ -235,7 +236,7 @@ export const tools: Tool[] = [
     name: 'vCard QR Code',
     blurb: 'Share your contact details.',
     h1: 'Create a digital contact QR code.',
-    title: 'vCard QR Code Generator — Contact QR Code | QR Tools',
+    title: 'vCard QR Code Generator — Contact QR Code | Code Generator',
     description: 'Turn your name, phone, email, website and address into a QR code that saves straight to any phone’s contacts. Free vCard QR codes for business cards.',
     intro: 'Add your details once. Anyone who scans the code can save you to their contacts in one tap — perfect for business cards, name badges and email signatures.',
     ui: { kind: 'generator', types: ['vcard'], type: 'vcard', caption: 'Scan to save contact', action: 'Generate contact QR code' },
@@ -280,7 +281,7 @@ export const tools: Tool[] = [
     name: 'Custom QR Code',
     blurb: 'Colours, styles and your logo.',
     h1: 'Custom QR code with logo',
-    title: 'Custom QR Code Generator with Logo — Free | QR Tools',
+    title: 'Custom QR Code Generator with Logo — Free | Code Generator',
     description: 'Design a QR code with your colours, rounded or dot patterns, custom corners and your logo in the middle. Live preview and a scan check. Free, no account.',
     intro: 'Make a QR code that looks like your brand. Change colours, patterns and corners, add your logo, and watch the preview update — with a scan check after every change.',
     ui: { kind: 'generator', design: 'inline', action: 'Update QR code' },
@@ -327,7 +328,7 @@ export const tools: Tool[] = [
     name: 'Batch QR Code',
     blurb: 'Many codes from one CSV.',
     h1: 'Batch QR code generator',
-    title: 'Batch QR Code Generator — CSV to ZIP, Free | QR Tools',
+    title: 'Batch QR Code Generator — CSV to ZIP, Free | Code Generator',
     description: 'Paste or upload a CSV and get one QR code per row in a single ZIP. Up to 500 codes at once, PNG or SVG, named from your list. Free, private, no sign-up.',
     intro: 'Make up to 500 QR codes at once from a spreadsheet. Each row becomes a named PNG or SVG, and you download them all in one ZIP.',
     ui: { kind: 'batch' },
@@ -364,6 +365,49 @@ export const tools: Tool[] = [
     prompts: [
       { q: 'Need a single code with a logo?', slug: 'custom-qr-code' },
       { q: 'Want to test your codes?', slug: 'qr-code-reader' },
+    ],
+  },
+  {
+    slug: 'barcode-generator',
+    name: 'Barcode Generator',
+    blurb: 'Create product labels and inventory codes.',
+    h1: 'Free barcode generator',
+    title: 'Free Barcode Generator — Code 128, EAN & UPC | Code Generator',
+    description: 'Create and download barcodes for products, stock and labels. Supports Code 128, EAN-13, UPC-A, EAN-8, Code 39 and ITF-14. Free and private.',
+    intro: 'Make a barcode for a product, package or inventory label. Choose a format, enter your value and download a crisp SVG or PNG.',
+    ui: { kind: 'barcode' },
+    howTo: {
+      title: 'How to make a barcode',
+      steps: [
+        'Enter the product number, SKU or short text you want to encode.',
+        'Choose the barcode format required by your label or scanning system.',
+        'Check the preview and make sure the value is correct.',
+        'Download SVG for print and design tools, or PNG for documents and screens.',
+      ],
+    },
+    explainer: [
+      {
+        heading: 'Pick the format that matches your use',
+        body: [
+          'Code 128 works well for general labels, stock numbers and mixed letters and digits. EAN-13 and UPC-A are common retail product formats; EAN-8 is a compact retail option. Code 39 and ITF-14 are often used for inventory and shipping labels.',
+          'Retail barcodes must use numbers assigned to your business and meet retailer requirements. Creating a barcode image does not register a product number or guarantee that a retailer will accept it.',
+        ],
+      },
+      {
+        heading: 'Made in your browser',
+        body: ['The barcode is rendered on your device. The value you enter is not uploaded or stored by this tool.'],
+      },
+    ],
+    faqs: [
+      { q: 'Which barcode format should I use?', a: 'Use the format required by your product, warehouse or retailer. Code 128 is flexible for labels; EAN-13 and UPC-A are widely used in retail.' },
+      { q: 'Can I use any number for a retail barcode?', a: 'A generated image does not register a product number. Retailers may require a valid number assigned to your business by the relevant standards body.' },
+      { q: 'What files can I download?', a: 'Download an SVG for sharp printing and editing, or a PNG for documents and screens.' },
+      { q: 'Is my barcode data uploaded?', a: 'No. The barcode is generated in your browser and the value stays on your device.' },
+    ],
+    related: ['qr-code-generator', 'batch-qr-code'],
+    prompts: [
+      { q: 'Need a QR code instead?', slug: 'qr-code-generator' },
+      { q: 'Want to create many QR codes?', slug: 'batch-qr-code' },
     ],
   },
 ];

@@ -4,6 +4,7 @@ import QRCodeGenerator from './QRCodeGenerator.astro';
 import QRCodeScanner from './QRCodeScanner.astro';
 import QRCodeReader from './QRCodeReader.astro';
 import BatchQRGenerator from './BatchQRGenerator.astro';
+import BarcodeGenerator from './BarcodeGenerator.astro';
 import FAQSection from './FAQSection.astro';
 import RelatedTools from './RelatedTools.astro';
 import ToolPrompts from './ToolPrompts.astro';
@@ -47,7 +48,7 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'QR Tools', item: `${site}/` },
+      { '@type': 'ListItem', position: 1, name: 'Code Generator', item: `${site}/` },
       { '@type': 'ListItem', position: 2, name: tool.name, item: url },
     ],
   },
@@ -57,7 +58,7 @@ const jsonLd = [
 <Base title={tool.title} description={tool.description} path={`/${tool.slug}`} jsonLd={jsonLd}>
   <div class="wrap">
     <header class="intro">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">QR Tools</a></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Code Generator</a></nav>
       <h1>{tool.h1}</h1>
       <p>{tool.intro}</p>
     </header>
@@ -69,6 +70,8 @@ const jsonLd = [
         <QRCodeScanner tool={tool.slug} mode="scanner" />
       ) : ui.kind === 'reader' ? (
         <QRCodeReader tool={tool.slug} />
+      ) : ui.kind === 'barcode' ? (
+        <BarcodeGenerator />
       ) : (
         <BatchQRGenerator tool={tool.slug} />
       )

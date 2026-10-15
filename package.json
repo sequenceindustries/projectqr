@@ -1,7 +1,7 @@
 {
-  "name": "qrtools",
+  "name": "code-generator",
   "version": "0.1.0",
-  "description": "QR Tools \u2014 create, customise and read QR codes in your browser. Free, no account.",
+  "description": "Create QR codes and barcodes in your browser. Free, no account.",
   "private": true,
   "type": "module",
   "engines": {
@@ -21,7 +21,8 @@
     "@fastify/compress": "^9.2.0",
     "@fastify/rate-limit": "^11.2.0",
     "@fastify/static": "^10.1.5",
-    "fastify": "^5.12.5"
+    "fastify": "^5.12.5",
+    "jsbarcode": "^3.12.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

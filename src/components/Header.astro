@@ -6,13 +6,14 @@ const current = Astro.url.pathname.replace(/\/$/, '');
 
 <header class="site-header">
   <div class="wrap bar">
-    <a class="brand" href="/" aria-label="QR Tools home">
+    <a class="brand" href="/" aria-label="Code Generator home">
       <Logo />
-      <span>QR Tools</span>
+      <span>Code Generator</span>
     </a>
     <nav class="quick" aria-label="Main">
-      <a href="/qr-code-generator" aria-current={current === '/qr-code-generator' ? 'page' : undefined}>Generator</a>
-      <a href="/qr-code-scanner" aria-current={current === '/qr-code-scanner' ? 'page' : undefined}>Scanner</a>
+      <a href="/qr-code-generator" aria-current={current.startsWith('/qr') ? 'page' : undefined}>QR codes</a>
+      <a href="/barcode-generator" aria-current={current === '/barcode-generator' ? 'page' : undefined}>Barcodes</a>
+      <a href="/qr-code-scanner" aria-current={current.includes('scanner') || current.includes('reader') ? 'page' : undefined}>Scan</a>
     </nav>
     <details class="menu">
       <summary class="btn btn--quiet btn--small">All tools</summary>

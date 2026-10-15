@@ -7,15 +7,15 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="about">
-      <a class="brand" href="/"><Logo size={26} light /> QR Tools</a>
-      <p>The fastest way to create, customise and read QR codes. Free, no account, and everything happens in your browser.</p>
+      <a class="brand" href="/"><Logo size={26} light /> Code Generator</a>
+      <p>Create and read QR codes and barcodes in your browser. Free, no account, and your code data stays on your device.</p>
     </div>
     <nav aria-label="QR tools">
       <h2 class="h">Tools</h2>
       <ul>{tools.map((t) => <li><a href={`/${t.slug}`}>{t.name}</a></li>)}</ul>
     </nav>
     <nav aria-label="Site">
-      <h2 class="h">QR Tools</h2>
+      <h2 class="h">Code Generator</h2>
       <ul class="one">
         <li><a href="/about">About</a></li>
         <li><a href="/privacy">Privacy</a></li>

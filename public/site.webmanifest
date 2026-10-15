@@ -1,6 +1,6 @@
 {
-  "name": "QR Tools",
-  "short_name": "QR Tools",
+  "name": "Code Generator",
+  "short_name": "Code Gen",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f4ef",

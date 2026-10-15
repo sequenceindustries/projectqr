@@ -34,14 +34,14 @@ const plausible = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
     <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="QR Tools" />
+    <meta property="og:site_name" content="Code Generator" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="QR Tools — create a QR code in seconds" />
+    <meta property="og:image:alt" content="Code Generator — create QR codes and barcodes in seconds" />
     <meta name="twitter:card" content="summary_large_image" />
 
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}

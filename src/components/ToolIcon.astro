@@ -14,6 +14,14 @@ const mini = (x: number, y: number, s: number) => `${eye(x, y, s)}${eye(x + 14 *
 
 <svg class="tool-icon" viewBox="0 0 96 72" aria-hidden="true" focusable="false">
   {
+    slug === 'barcode-generator' && (
+      <g fill="none" stroke={ink} stroke-linecap="round">
+        <path d="M18 17v38M24 13v46M31 18v36M38 12v48M46 18v36M52 14v44M60 17v38M68 11v50M76 18v36" stroke-width="3" />
+        <path d="M18 57h58" stroke={lime} stroke-width="4" />
+      </g>
+    )
+  }
+  {
     slug === 'qr-code-generator' && (
       <g>
         <path d={mini(26, 14, 2)} fill={ink} fill-rule="evenodd" />

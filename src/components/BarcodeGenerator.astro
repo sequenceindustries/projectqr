@@ -1,0 +1,173 @@
+<section class="barcode-gen" data-barcode-generator aria-label="Barcode generator">
+  <div class="card form-card">
+    <form data-barcode-form novalidate>
+      <label class="label" for="barcode-value">What should your barcode contain?</label>
+      <input class="field" id="barcode-value" data-barcode-value value="123456789012" autocomplete="off" spellcheck="false" aria-describedby="barcode-hint barcode-error" />
+      <p class="hint" id="barcode-hint">Enter a product number, SKU or short text. The value stays in your browser.</p>
+
+      <label class="label" for="barcode-format">Barcode format</label>
+      <select class="field" id="barcode-format" data-barcode-format>
+        <option value="CODE128">Code 128 — flexible text and numbers</option>
+        <option value="EAN13">EAN-13 — retail products</option>
+        <option value="UPC">UPC-A — North American retail</option>
+        <option value="EAN8">EAN-8 — compact retail products</option>
+        <option value="CODE39">Code 39 — inventory and labels</option>
+        <option value="ITF14">ITF-14 — cartons and cases</option>
+      </select>
+
+      <p class="error" id="barcode-error" data-barcode-error role="alert" hidden></p>
+      <div class="actions">
+        <button class="btn btn--primary" type="submit">Update barcode</button>
+        <button class="btn btn--quiet" type="button" data-barcode-copy>Copy value</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card preview-card">
+    <div class="preview-heading">
+      <div>
+        <p class="eyebrow">Live preview</p>
+        <h2 data-barcode-name>Code 128</h2>
+      </div>
+      <span class="ready">Made on your device</span>
+    </div>
+    <div class="barcode-stage" data-barcode-stage>
+      <svg data-barcode-svg role="img" aria-label="Barcode preview"></svg>
+    </div>
+    <div class="actions downloads">
+      <button class="btn btn--primary" type="button" data-barcode-download="svg" disabled>Download SVG</button>
+      <button class="btn btn--quiet" type="button" data-barcode-download="png" disabled>Download PNG</button>
+    </div>
+    <p class="privacy-note">Your barcode is generated locally. No text or product data is uploaded.</p>
+  </div>
+</section>
+
+<script>
+  import { mountBarcodeGenerators } from '../scripts/barcode';
+  mountBarcodeGenerators();
+</script>
+
+<style>
+  .barcode-gen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+    align-items: start;
+  }
+  .card {
+    min-width: 0;
+    padding: var(--s-5);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line), var(--lift);
+  }
+  form {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .label {
+    font-weight: 700;
+  }
+  .field {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+  }
+  .field:focus-visible {
+    outline: 3px solid var(--signal-wash);
+    border-color: var(--signal);
+  }
+  .hint,
+  .privacy-note {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .hint {
+    margin-top: -0.35rem;
+    margin-bottom: var(--s-2);
+  }
+  .error {
+    margin: 0;
+    color: var(--err);
+    font-weight: 650;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .actions .btn {
+    min-height: 46px;
+  }
+  .preview-card {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .preview-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-3);
+    align-items: start;
+  }
+  .eyebrow {
+    margin: 0 0 2px;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  h2 {
+    font-size: var(--step-1);
+  }
+  .ready {
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--r-pill);
+    background: var(--ok-wash);
+    color: var(--ok);
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .barcode-stage {
+    display: grid;
+    place-items: center;
+    min-height: 170px;
+    overflow-x: auto;
+    padding: var(--s-4);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: #fff;
+  }
+  .barcode-stage svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .privacy-note {
+    margin: -0.4rem 0 0;
+  }
+  @media (min-width: 820px) {
+    .barcode-gen {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+      gap: var(--s-5);
+    }
+    .preview-card {
+      position: sticky;
+      top: var(--s-4);
+    }
+  }
+  @media (max-width: 599px) {
+    .card {
+      padding: var(--s-4);
+    }
+    .actions .btn {
+      flex: 1 1 auto;
+    }
+  }
+</style>

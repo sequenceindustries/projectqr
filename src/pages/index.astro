@@ -1,24 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
 import QRCodeGenerator from '../components/QRCodeGenerator.astro';
+import BarcodeGenerator from '../components/BarcodeGenerator.astro';
 import ToolGrid from '../components/ToolGrid.astro';
 import FAQSection from '../components/FAQSection.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { tools } from '../data/tools';
 
 const site = Astro.site!.toString().replace(/\/$/, '');
+const qrTools = tools.filter((tool) => tool.slug !== 'barcode-generator');
+const barcodeTools = tools.filter((tool) => tool.slug === 'barcode-generator');
 const faqs = [
-  { q: 'Is QR Tools free?', a: 'Yes. Every tool is free, with no account, no watermark and no limit on how many codes you create. The QR codes are static, so they never expire.' },
-  { q: 'Is my data private?', a: 'QR codes are generated, scanned and zipped in your browser. What you type — links, Wi-Fi passwords, contact details — is never uploaded or stored.' },
+  { q: 'Is Code Generator free?', a: 'Yes. The code tools are free to use, with no account or watermark.' },
+  { q: 'Is my data private?', a: 'QR codes and barcodes are created in your browser. Values you enter are not uploaded or stored.' },
   { q: 'Which format should I download?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size. JPG is there if a tool needs it.' },
-  { q: 'Will my QR code work on every phone?', a: 'Yes. Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
+  { q: 'Which barcode formats are available?', a: 'Create Code 128, EAN-13, UPC-A, EAN-8, Code 39 and ITF-14 barcodes. Choose the format required by your product, warehouse or retailer.' },
+  { q: 'Will QR codes work on phones?', a: 'Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
 ];
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'QR Tools', url: site + '/', description: 'Create, customise and read QR codes in your browser.' },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Code Generator', url: site + '/', description: 'Create, customise and read QR codes and barcodes in your browser.' },
   {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'QR Tools — QR Code Generator',
+    name: 'Code Generator — QR and Barcode Tools',
     url: site + '/',
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Any',
@@ -31,48 +35,70 @@ const jsonLd = [
 ---
 
 <Base
-  title="QR Tools — Free QR Code Generator, Scanner & Reader"
-  description="Generate free QR codes for links, Wi-Fi, contact details, text and more. Customise colours, add a logo, download PNG or SVG. No account needed."
+  title="Code Generator — Free QR Code and Barcode Tools"
+  description="Create, customise and scan QR codes, or generate barcodes for products and inventory. Free in-browser tools, no account needed."
   path="/"
   jsonLd={jsonLd}
 >
   <section class="hero wrap" aria-labelledby="hero-h">
     <div class="copy">
-      <h1 id="hero-h">Create a QR code in seconds.</h1>
-      <p class="lede">Generate free QR codes for links, Wi-Fi, contact details, text and more.</p>
+      <h1 id="hero-h">Create a QR code or barcode in seconds.</h1>
+      <p class="lede">One simple place for QR codes, product labels and inventory barcodes.</p>
     </div>
-    <QRCodeGenerator tool="home" />
+    <div class="code-maker">
+      <div class="mode-toggle" role="tablist" aria-label="Choose a code type">
+        <button id="qr-tab" type="button" role="tab" aria-selected="true" aria-controls="qr-panel" data-code-tab="qr">QR code</button>
+        <button id="barcode-tab" type="button" role="tab" aria-selected="false" aria-controls="barcode-panel" data-code-tab="barcode">Barcode</button>
+      </div>
+      <div id="qr-panel" role="tabpanel" aria-labelledby="qr-tab" data-code-panel="qr">
+        <QRCodeGenerator tool="home" />
+      </div>
+      <div id="barcode-panel" role="tabpanel" aria-labelledby="barcode-tab" data-code-panel="barcode" hidden>
+        <BarcodeGenerator />
+      </div>
+    </div>
   </section>
 
   <section class="tools wrap" aria-labelledby="tools-h">
-    <h2 id="tools-h">Every QR tool you need</h2>
-    <ToolGrid tools={tools} flagship="qr-code-generator" />
+    <div class="section-heading">
+      <div><p class="eyebrow">Create and scan</p><h2 id="tools-h">QR code tools</h2></div>
+      <a href="/qr-code-generator">Open QR generator <span aria-hidden="true">→</span></a>
+    </div>
+    <ToolGrid tools={qrTools} flagship="qr-code-generator" />
+  </section>
+
+  <section class="tools wrap barcodes" aria-labelledby="barcodes-h">
+    <div class="section-heading">
+      <div><p class="eyebrow">Product and inventory labels</p><h2 id="barcodes-h">Barcode tools</h2></div>
+      <a href="/barcode-generator">Open barcode generator <span aria-hidden="true">→</span></a>
+    </div>
+    <ToolGrid tools={barcodeTools} flagship="barcode-generator" />
   </section>
 
   <AdSlot name="home-mid" />
 
   <section class="how wrap" aria-labelledby="how-h">
-    <h2 id="how-h">Enter. Generate. Download.</h2>
+    <h2 id="how-h">Choose a type. Make it. Download.</h2>
     <ol>
       <li>
         <h3>Enter</h3>
-        <p>Paste a link, or fill in Wi-Fi, contact or message details. The code appears as you type.</p>
+        <p>Choose QR or barcode, then enter a link, product number, contact or other value.</p>
       </li>
       <li>
         <h3>Make it yours</h3>
-        <p>Pick colours, a pattern, rounded corners or add your logo. We check it still scans after every change.</p>
+        <p>Customise a QR design or select the barcode format your product or label needs.</p>
       </li>
       <li>
         <h3>Download</h3>
-        <p>PNG for screens, SVG for print. No account, no watermark, and the code never expires.</p>
+        <p>Save a crisp PNG or SVG. No account and no watermark.</p>
       </li>
     </ol>
   </section>
 
   <section class="private wrap" aria-labelledby="priv-h">
     <div class="priv-card">
-      <h2 id="priv-h">Your QR code is generated in your browser.</h2>
-      <p>Links, Wi-Fi passwords and contact details never touch our servers. Scanning works the same way: your camera feed and images stay on your device.</p>
+      <h2 id="priv-h">Your code data stays on your device.</h2>
+      <p>QR codes and barcodes are created in your browser. Values you enter are never uploaded or stored.</p>
       <a href="/privacy">How we handle data</a>
     </div>
   </section>
@@ -80,6 +106,16 @@ const jsonLd = [
   <div class="wrap faq-wrap">
     <FAQSection faqs={faqs} />
   </div>
+
+  <script>
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-code-tab]')];
+    const panels = [...document.querySelectorAll<HTMLElement>('[data-code-panel]')];
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      const selected = tab.dataset.codeTab;
+      tabs.forEach((item) => item.setAttribute('aria-selected', String(item === tab)));
+      panels.forEach((panel) => (panel.hidden = panel.dataset.codePanel !== selected));
+    }));
+  </script>
 </Base>
 
 <style>
@@ -104,6 +140,60 @@ const jsonLd = [
   }
   .tools {
     margin-top: var(--s-6);
+  }
+  .section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: var(--s-3);
+    margin-bottom: var(--s-5);
+  }
+  .section-heading h2 {
+    margin: 0;
+  }
+  .section-heading a {
+    color: var(--signal-deep);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .section-heading a:hover {
+    text-decoration: underline;
+  }
+  .eyebrow {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mode-toggle {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: var(--s-4);
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+  }
+  .mode-toggle button {
+    min-height: 42px;
+    padding: 0.5rem 1.1rem;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--ink-soft);
+    font: 700 var(--step--1) / 1 var(--font-body);
+    cursor: pointer;
+  }
+  .mode-toggle button[aria-selected='true'] {
+    background: var(--ink);
+    color: #fff;
+  }
+  .barcodes {
+    margin-top: var(--s-8);
   }
   .tools h2,
   .how h2 {
