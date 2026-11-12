@@ -7,6 +7,7 @@ import BatchQRGenerator from './BatchQRGenerator.astro';
 import BarcodeGenerator from './BarcodeGenerator.astro';
 import PasswordGenerator from './PasswordGenerator.astro';
 import WordSearchMaker from './WordSearchMaker.astro';
+import UrlShortener from './UrlShortener.astro';
 import FAQSection from './FAQSection.astro';
 import RelatedTools from './RelatedTools.astro';
 import ToolPrompts from './ToolPrompts.astro';
@@ -78,6 +79,8 @@ const jsonLd = [
         <PasswordGenerator />
       ) : ui.kind === 'word-search' ? (
         <WordSearchMaker />
+      ) : ui.kind === 'shortener' ? (
+        <UrlShortener />
       ) : (
         <BatchQRGenerator tool={tool.slug} />
       )

@@ -5,19 +5,23 @@ import fastifyStatic from '@fastify/static';
 import fs from 'node:fs';
 import path from 'node:path';
 import { EVENT_NAMES, EVENT_PROPS } from '../shared/events.js';
+import { registerLinkRoutes, type LinkStore } from './links.js';
 
 /**
- * QR Tools server.
+ * Code Generator server.
  *
- * Every QR code is generated, scanned and zipped in the visitor's browser,
- * so this service never receives QR content. It only serves the prebuilt
- * static site and accepts whitelisted, content-free analytics events.
+ * Codes, passwords and puzzles are made in the visitor's browser, so this
+ * service never receives what they enter. It serves the prebuilt static
+ * site, accepts whitelisted, content-free analytics events, and runs the
+ * URL shortener (the one feature that stores data: see server/links.ts).
  */
 export interface AppOptions {
   /** Directory of the built static site. Omit to run API-only (tests). */
   staticDir?: string;
   logger?: boolean;
   eventsPerMinute?: number;
+  /** URL shortener. Omit to disable the routes entirely; store null = routes answer "unavailable". */
+  links?: { store: LinkStore | null; baseUrl: string; ownHosts: string[]; createPerHour?: number };
   /** Extra origins allowed by the CSP, e.g. an ad or analytics network later. */
   cspExtra?: { script?: string[]; connect?: string[]; img?: string[]; frame?: string[] };
 }
@@ -59,7 +63,7 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
 
   app.addHook('onSend', async (_req, reply, payload) => {
     reply.header('X-Content-Type-Options', 'nosniff');
-    reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+    if (!reply.hasHeader('Referrer-Policy')) reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
     // Camera is allowed for this origin only (the scanner asks first); nothing else.
     reply.header('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(), payment=(), usb=()');
     reply.header('Cross-Origin-Opener-Policy', 'same-origin');
@@ -120,11 +124,12 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
   // sendBeacon posts text/plain.
   app.addContentTypeParser('text/plain', { parseAs: 'string', bodyLimit: 2048 }, (_req, body, done) => done(null, body));
 
-  if (opts.staticDir) await registerSite(app, opts.staticDir);
+  const pages = opts.staticDir ? await registerSite(app, opts.staticDir) : new Map<string, Buffer>();
+  if (opts.links) await registerLinkRoutes(app, { ...opts.links, page: () => pages.get('link.html') });
   return app;
 }
 
-async function registerSite(app: FastifyInstance, dir: string) {
+async function registerSite(app: FastifyInstance, dir: string): Promise<Map<string, Buffer>> {
   const root = path.resolve(dir);
   await app.register(fastifyStatic, {
     root,
@@ -152,7 +157,8 @@ async function registerSite(app: FastifyInstance, dir: string) {
   for (const rel of files) {
     if (!rel.endsWith('.html')) continue;
     pages.set(rel, fs.readFileSync(path.join(root, rel)));
-    if (rel === '404.html') continue;
+    // 404 and the short-link page are only served by their own handlers.
+    if (rel === '404.html' || rel === 'link.html') continue;
     const route = rel === 'index.html' ? '/' : '/' + rel.replace(/\.html$/, '');
     app.get(route, (_req, reply) =>
       reply.type('text/html; charset=utf-8').header('Cache-Control', 'public, max-age=0, must-revalidate').send(pages.get(rel)),
@@ -182,4 +188,5 @@ async function registerSite(app: FastifyInstance, dir: string) {
     if (notFound) return reply.status(404).type('text/html; charset=utf-8').send(notFound);
     return reply.status(404).send('Not found');
   });
+  return pages;
 }

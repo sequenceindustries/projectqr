@@ -15,6 +15,9 @@ export const EVENT_NAMES = new Set([
   'logo_added',
   'batch_generation_started',
   'batch_generation_completed',
+  'short_link_created',
+  'short_link_copied',
+  'short_link_failed',
 ]);
 
 /** Allowed property keys. Values are numbers or short tokens (letters, digits, _ . -). */

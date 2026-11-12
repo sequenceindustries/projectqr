@@ -2,16 +2,21 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Privacy — Code Generator" description="Code Generator creates QR codes, barcodes, passwords and puzzles in your browser. Values are not uploaded or stored." path="/privacy">
+<Base title="Privacy — Code Generator" description="Code Generator creates QR codes, barcodes, passwords and puzzles in your browser. Only short links from the URL Shortener are stored on our server." path="/privacy">
   <article class="wrap prose">
     <h1>Privacy</h1>
-    <p class="lede">Short version: QR codes, barcodes, passwords and puzzles are created on your device. We never see the values you enter or generate.</p>
+    <p class="lede">Short version: QR codes, barcodes, passwords and puzzles are created on your device, and we never see the values you enter or generate. The one exception is the URL Shortener, which has to save short links so they keep working.</p>
 
     <h2>Generating codes, passwords and puzzles</h2>
     <p>QR codes, barcodes, passwords and word puzzles are generated in your browser. Links, text, Wi-Fi network names and passwords, contact details, product numbers, word lists and anything else you enter stay on your device. They are not uploaded, logged or stored, and nothing is saved when you close the page.</p>
     <p>Password generation uses your browser’s Web Crypto secure random generator. Copy the result into a trusted password manager; this site does not save or recover passwords.</p>
     <p>Logos you add are resized and re-encoded in your browser and are never uploaded.</p>
-    <p>The codes are static: the content is inside the code itself. We don’t run redirect links, so we can’t see or count scans of your codes.</p>
+    <p>The codes are static: the content is inside the code itself. QR codes don’t go through our servers, so we can’t see or count scans of them (unless you encode one of our short links — see below).</p>
+
+    <h2>URL Shortener</h2>
+    <p>When you shorten a link, we store the destination address, the short ending, when it was created and a running total of how many times it has been opened. We don’t record who opened a link, their IP address, location or device, and there is no per-click log. Anyone with a short link can see its destination and open count by adding a + to the end of it, so don’t shorten links that contain private information such as passwords, tokens or one-time codes.</p>
+    <p>To prevent abuse, the number of links one connection can create is limited; this uses your IP address in memory for up to an hour and it is never written to disk. Links reported as harmful may be reviewed and disabled. Reports contain only the reason you give us.</p>
+    <p>Your recent short links are listed on the URL Shortener page from your own browser’s storage, not from our server. “Clear” removes them from that list.</p>
 
     <h2>Scanning and reading</h2>
     <p>The camera only starts after you tap “Scan with camera” and your browser asks for permission. Video frames are analysed on your device, are never recorded or uploaded, and the camera switches off as soon as a code is found or you leave the page. Images you upload, drop or paste are read the same way and discarded.</p>

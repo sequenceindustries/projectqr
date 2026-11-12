@@ -22,6 +22,15 @@ const mini = (x: number, y: number, s: number) => `${eye(x, y, s)}${eye(x + 14 *
     )
   }
   {
+    slug === 'url-shortener' && (
+      <g>
+        <rect x="10" y="22" width="40" height="28" rx="14" fill="#fff" stroke={ink} stroke-width="3" />
+        <rect x="46" y="22" width="40" height="28" rx="14" fill={lime} stroke={ink} stroke-width="3" />
+        <path d="M34 36h28" stroke={ink} stroke-width="4" stroke-linecap="round" />
+      </g>
+    )
+  }
+  {
     slug === 'password-generator' && (
       <g>
         <rect x="22" y="32" width="52" height="34" rx="7" fill="#fff" stroke={ink} stroke-width="3" />

@@ -16,6 +16,7 @@ export type ToolUi =
   | { kind: 'barcode' }
   | { kind: 'password' }
   | { kind: 'word-search' }
+  | { kind: 'shortener' }
   | { kind: 'scanner' }
   | { kind: 'reader' }
   | { kind: 'batch' };
@@ -410,6 +411,53 @@ export const tools: Tool[] = [
     prompts: [
       { q: 'Need a QR code instead?', slug: 'qr-code-generator' },
       { q: 'Want to create many QR codes?', slug: 'batch-qr-code' },
+    ],
+  },
+  {
+    slug: 'url-shortener',
+    name: 'URL Shortener',
+    blurb: 'Turn a long link into a short one, with a QR code.',
+    h1: 'Free URL shortener',
+    title: 'Free URL Shortener with QR Code — No Sign-up | Code Generator',
+    description: 'Shorten a long link in one click, choose a custom ending, and get a matching QR code. Free, no account, and links don’t expire.',
+    intro: 'Paste a long link to get a short one you can share, print or say out loud — plus a QR code that scans faster because the link is shorter.',
+    ui: { kind: 'shortener' },
+    howTo: {
+      title: 'How to shorten a link',
+      steps: [
+        'Paste the long link you want to share.',
+        'Optionally choose a custom ending, like /s/spring-menu.',
+        'Tap “Shorten link”, then copy the short link or download its QR code.',
+        'Add a + to the end of any short link to see where it goes without opening it.',
+      ],
+    },
+    explainer: [
+      {
+        heading: 'Short links that stay readable and safe',
+        body: [
+          'Every short link has a preview page: add a + to the end (for example …/s/spring-menu+) to see the full destination before you visit. Links to private or local addresses, other link shorteners and non-web addresses are refused, so a short link here always points to a real, public web page.',
+          'If a link leads somewhere harmful, anyone can report it from its preview page and we will disable it.',
+        ],
+      },
+      {
+        heading: 'What we store',
+        body: [
+          'Unlike our other tools, a short link has to be saved on our server so it keeps working. We store the destination, when the link was made and a simple total of how many times it was opened. We don’t record who opened it, their IP address or their device. Don’t shorten links that contain private information such as passwords or one-time codes.',
+        ],
+      },
+    ],
+    faqs: [
+      { q: 'Is this URL shortener free?', a: 'Yes. No account, no ads in your links and no expiry date. Short links keep working unless they’re reported and found to be harmful.' },
+      { q: 'Can I choose my own short link?', a: 'Yes. Open “Customise the ending” and pick 3–32 letters, numbers or dashes. Each ending can only be used once, so popular words may be taken.' },
+      { q: 'Can I change where a short link goes?', a: 'Not yet. Short links can’t be edited after they’re created, which also means nobody can quietly change where yours points. Create a new link if the destination changes.' },
+      { q: 'How do I check where a short link goes?', a: 'Add a + to the end of the short link. You’ll see the full destination, when it was created and how often it’s been opened, without visiting it.' },
+      { q: 'Do you track people who click my link?', a: 'No. We count the total number of opens, and that’s all. We don’t store IP addresses, locations or device details.' },
+      { q: 'Why was my link refused?', a: 'We only shorten public web links (http or https). Links to private or local addresses, links with passwords in them, and links that are already short links are refused.' },
+    ],
+    related: ['qr-code-generator', 'custom-qr-code', 'batch-qr-code'],
+    prompts: [
+      { q: 'Want a styled QR code for your link?', slug: 'custom-qr-code' },
+      { q: 'Need QR codes for many links?', slug: 'batch-qr-code' },
     ],
   },
   {

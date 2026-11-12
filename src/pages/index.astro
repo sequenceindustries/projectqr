@@ -11,10 +11,11 @@ const site = Astro.site!.toString().replace(/\/$/, '');
 const barcodeTools = tools.filter((tool) => tool.slug === 'barcode-generator');
 const passwordTools = tools.filter((tool) => tool.slug === 'password-generator');
 const puzzleTools = tools.filter((tool) => tool.slug === 'word-search-maker');
-const qrTools = tools.filter((tool) => !['barcode-generator', 'password-generator', 'word-search-maker'].includes(tool.slug));
+const linkTools = tools.filter((tool) => tool.slug === 'url-shortener');
+const qrTools = tools.filter((tool) => !['barcode-generator', 'password-generator', 'word-search-maker', 'url-shortener'].includes(tool.slug));
 const faqs = [
   { q: 'Is Code Generator free?', a: 'Yes. The generators are free to use, with no account or watermark.' },
-  { q: 'Is my data private?', a: 'QR codes, barcodes, passwords and word puzzles are created in your browser. Values you enter are not uploaded or stored.' },
+  { q: 'Is my data private?', a: 'QR codes, barcodes, passwords and word puzzles are created in your browser, and values you enter are not uploaded or stored. The URL Shortener is the exception: short links are saved on our server so they keep working.' },
   { q: 'Which format should I download?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size. JPG is there if a tool needs it.' },
   { q: 'Which barcode formats are available?', a: 'Create Code 128, EAN-13, UPC-A, EAN-8, Code 39, ITF-14 and Data Matrix codes. Choose the format required by your product, warehouse or retailer.' },
   { q: 'Will QR codes work on phones?', a: 'Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
@@ -76,6 +77,14 @@ const jsonLd = [
       <a href="/barcode-generator">Open barcode generator <span aria-hidden="true">→</span></a>
     </div>
     <ToolGrid tools={barcodeTools} flagship="barcode-generator" />
+  </section>
+
+  <section class="tools wrap" aria-labelledby="links-h">
+    <div class="section-heading">
+      <div><p class="eyebrow">Share shorter links</p><h2 id="links-h">Link tools</h2></div>
+      <a href="/url-shortener">Open URL shortener <span aria-hidden="true">→</span></a>
+    </div>
+    <ToolGrid tools={linkTools} flagship="url-shortener" />
   </section>
 
   <section class="tools wrap" aria-labelledby="passwords-h">

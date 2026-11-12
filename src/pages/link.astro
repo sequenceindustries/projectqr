@@ -1,0 +1,51 @@
+---
+/**
+ * Served by the server for /s/:code+ (preview) and for unknown, disabled or
+ * unavailable short links. Reads the code from the address bar.
+ */
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Short link — Code Generator" description="See where a short link goes before you open it." path="/link" noindex>
+  <section class="wrap lp" data-link-page>
+    <div class="card" data-lp-card>
+      <p class="eyebrow" data-lp-eyebrow>Short link</p>
+      <h1 data-lp-title>Checking this link…</h1>
+      <div data-lp-body></div>
+      <div class="actions" data-lp-actions></div>
+    </div>
+
+    <form class="card report" data-lp-report hidden>
+      <h2>Report this link</h2>
+      <p class="field-hint">Tell us if it leads to phishing, malware, scams or other harmful content. We review every report.</p>
+      <label class="label" for="lp-reason">What’s wrong?</label>
+      <textarea class="input" id="lp-reason" data-lp-reason maxlength="500" rows="3" required></textarea>
+      <p class="field-error" data-lp-report-msg role="status"></p>
+      <button type="submit" class="btn btn--quiet">Send report</button>
+    </form>
+
+    <p class="more">Need your own short link? <a href="/url-shortener">Use the URL shortener</a>.</p>
+  </section>
+</Base>
+
+<script>
+  import { mountLinkPage } from '../scripts/link-page';
+  mountLinkPage();
+</script>
+
+<style>
+  .lp { display: grid; gap: var(--s-4); max-width: 720px; padding-top: var(--s-5); }
+  .card { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: var(--r-lg); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
+  .card:first-child { border-top: 6px solid var(--mark); }
+  /* Codes are case-sensitive, so never upper-case them. */
+  .eyebrow { margin: 0; color: var(--ink-soft); font: 700 var(--step--1) ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+  h1 { font-size: var(--step-3); }
+  .lp :global(.dest) { padding: var(--s-3) var(--s-4); border-radius: var(--r-md); background: var(--paper); font: 600 0.95rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+  .lp :global(.host) { font-size: var(--step-1); }
+  .lp :global(.meta) { font-size: var(--step--1); color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .actions :global(.btn) { flex: 0 1 auto; }
+  .report h2 { font-size: var(--step-1); }
+  .field-error:empty { display: none; }
+  .more { color: var(--ink-soft); }
+</style>
