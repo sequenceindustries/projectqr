@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { BRAND } from '../data/site';
 
 interface Props {
   title: string;
@@ -34,14 +35,14 @@ const plausible = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
     <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Code Generator" />
+    <meta property="og:site_name" content={BRAND} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Code Generator — create QR codes and barcodes in seconds" />
+    <meta property="og:image:alt" content={`${BRAND} — free QR codes and short links`} />
     <meta name="twitter:card" content="summary_large_image" />
 
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}

@@ -1,4 +1,4 @@
-# Code Generator
+# Qwode
 
 **Create QR codes, barcodes, passwords and printable word puzzles in one free, browser-based toolkit.** No account required. Your values stay on your device.
 

@@ -8,7 +8,7 @@ import { EVENT_NAMES, EVENT_PROPS } from '../shared/events.js';
 import { registerLinkRoutes, type LinkStore } from './links.js';
 
 /**
- * Code Generator server.
+ * Qwode server.
  *
  * Codes, passwords and puzzles are made in the visitor's browser, so this
  * service never receives what they enter. It serves the prebuilt static

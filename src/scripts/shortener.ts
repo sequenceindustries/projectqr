@@ -58,7 +58,7 @@ export function mountShorteners() {
 }
 
 function mount(root: HTMLElement) {
-  const tool = 'url-shortener';
+  const tool = root.dataset.tool ?? 'url-shortener';
   const form = $<HTMLFormElement>(root, '[data-short-form]');
   const urlIn = $<HTMLInputElement>(root, '[data-short-url]');
   const urlErr = $(root, '[data-short-url-err]');

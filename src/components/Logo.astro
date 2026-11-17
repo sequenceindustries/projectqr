@@ -1,5 +1,5 @@
 ---
-/** Mark: a simple code pattern with one lime signal bar. */
+/** Mark: a QR finder pattern with a descender, so it reads as a "q". The lime module is the accent. */
 interface Props {
   size?: number;
   light?: boolean;
@@ -9,9 +9,8 @@ const ink = light ? '#ffffff' : '#13151f';
 ---
 
 <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-  <rect x="3" y="5" width="4" height="22" rx="1.2" fill={ink}></rect>
-  <rect x="10" y="9" width="3" height="14" rx="1" fill={ink}></rect>
-  <rect x="16" y="5" width="5" height="22" rx="1.2" fill={ink}></rect>
-  <rect x="24" y="8" width="3" height="16" rx="1" fill="#c6f432" stroke={ink} stroke-width="1"></rect>
-  <rect x="29" y="5" width="2" height="22" rx="1" fill={ink}></rect>
+  <path fill={ink} fill-rule="evenodd" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm1 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"></path>
+  <rect x="9" y="9" width="6" height="6" rx="1.4" fill={ink}></rect>
+  <rect x="18" y="14" width="4" height="16" rx="1.6" fill={ink}></rect>
+  <rect x="24.5" y="24.5" width="5.5" height="5.5" rx="1.2" fill="#c6f432" stroke={ink} stroke-width="1"></rect>
 </svg>

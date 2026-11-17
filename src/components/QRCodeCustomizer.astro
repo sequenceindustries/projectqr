@@ -39,7 +39,7 @@ const Tag = inline ? 'div' : 'details';
       <h2 class="design-h">Design</h2>
     ) : (
       <summary>
-        <span class="sum-t">Customise design</span>
+        <h2 class="sum-t">Customise design</h2>
         <span class="sum-s">Colours, style, logo, error correction</span>
       </summary>
     )
@@ -185,6 +185,8 @@ const Tag = inline ? 'div' : 'details';
     transform: rotate(-135deg) translateY(-3px);
   }
   .sum-t {
+    margin: 0;
+    letter-spacing: normal;
     font: 650 var(--step-1) / 1.2 var(--font-display);
   }
   .sum-s {

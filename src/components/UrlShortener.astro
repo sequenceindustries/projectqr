@@ -1,11 +1,15 @@
 ---
+interface Props {
+  tool?: string;
+}
+const { tool = 'url-shortener' } = Astro.props;
 /**
  * URL shortener UI. Unlike the other tools, a short link must be stored on
  * our server so it keeps working; the page says so plainly.
  */
 ---
 
-<section class="shortener" data-shortener aria-label="URL shortener">
+<section class="shortener" data-shortener data-tool={tool} aria-label="URL shortener">
   <form class="card in" data-short-form novalidate>
     <div class="field">
       <label class="label big" for="short-url">Long link</label>

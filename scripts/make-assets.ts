@@ -4,13 +4,13 @@ import sharp from 'sharp';
 import fs from 'node:fs';
 import { DEFAULT_DESIGN, encode, toSvg } from '../shared/qr/render.js';
 
+// Keep in sync with src/components/Logo.astro: a QR finder with a descender (a "q").
 const mark = (light = false) => {
   const ink = light ? '#ffffff' : '#13151f';
-  return `<rect x="2" y="3" width="4" height="26" rx="1" fill="${ink}"/>
-  <rect x="9" y="3" width="2" height="26" rx="1" fill="${ink}"/>
-  <rect x="14" y="3" width="6" height="26" rx="1" fill="${ink}"/>
-  <rect x="23" y="3" width="3" height="26" rx="1" fill="${ink}"/>
-  <rect x="29" y="3" width="2" height="26" rx="1" fill="#c6f432"/>`;
+  return `<path fill="${ink}" fill-rule="evenodd" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm1 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"/>
+  <rect x="9" y="9" width="6" height="6" rx="1.4" fill="${ink}"/>
+  <rect x="18" y="14" width="4" height="16" rx="1.6" fill="${ink}"/>
+  <rect x="24.5" y="24.5" width="5.5" height="5.5" rx="1.2" fill="#c6f432" stroke="${ink}" stroke-width="1"/>`;
 };
 
 fs.mkdirSync('public', { recursive: true });
@@ -23,16 +23,16 @@ await sharp(Buffer.from(touch)).png().toFile('public/apple-touch-icon.png');
 await sharp(Buffer.from(touch)).resize(512, 512).png().toFile('public/icon-512.png');
 
 // The OG image carries a real, scannable QR code.
-const target = process.env.SITE_URL || 'Create a code in seconds — Code Generator';
+const target = process.env.SITE_URL || 'Qwode — free QR codes and short links';
 const qr = toSvg(encode(target, 'M'), { ...DEFAULT_DESIGN, moduleStyle: 'rounded', eyeStyle: 'rounded', margin: 2 }, 380)
   .replace('<svg ', '<svg x="740" y="125" ');
 const og = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#f5f4ef"/>
   <g transform="translate(80 80) scale(2)">${mark()}</g>
-  <text x="160" y="124" font-family="BricoX" font-size="40" fill="#13151f">Code Generator</text>
-  <text x="80" y="292" font-family="BricoX" font-size="74" letter-spacing="-2" fill="#13151f">Create any code</text>
-  <text x="80" y="380" font-family="BricoX" font-size="74" letter-spacing="-2" fill="#13151f">in seconds.</text>
-  <text x="80" y="462" font-family="Figtree Light" font-size="30" fill="#4b4f5e">Free · No account · Made in your browser</text>
+  <text x="160" y="124" font-family="BricoX" font-size="44" fill="#13151f">Qwode</text>
+  <text x="80" y="292" font-family="BricoX" font-size="70" letter-spacing="-2" fill="#13151f">QR codes and</text>
+  <text x="80" y="380" font-family="BricoX" font-size="70" letter-spacing="-2" fill="#13151f">short links, free.</text>
+  <text x="80" y="462" font-family="Figtree Light" font-size="30" fill="#4b4f5e">No sign-up · No watermark · Never expire</text>
   <rect x="720" y="105" width="420" height="420" rx="28" fill="#ffffff"/>
   <g stroke="#13151f" stroke-width="10" stroke-linecap="round" fill="none">
     <path d="M700 150V85h65M1160 150V85h-65M700 480v65h65M1160 480v65h-65"/>
@@ -46,8 +46,8 @@ fs.writeFileSync(
   'public/site.webmanifest',
   JSON.stringify(
     {
-      name: 'Code Generator',
-      short_name: 'Code Gen',
+      name: 'Qwode — QR codes and short links',
+      short_name: 'Qwode',
       start_url: '/',
       display: 'standalone',
       background_color: '#f5f4ef',

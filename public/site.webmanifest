@@ -1,6 +1,6 @@
 {
-  "name": "Code Generator",
-  "short_name": "Code Gen",
+  "name": "Qwode — QR codes and short links",
+  "short_name": "Qwode",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f4ef",

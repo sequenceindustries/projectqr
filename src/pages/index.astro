@@ -1,35 +1,53 @@
 ---
 import Base from '../layouts/Base.astro';
 import QRCodeGenerator from '../components/QRCodeGenerator.astro';
-import BarcodeGenerator from '../components/BarcodeGenerator.astro';
+import UrlShortener from '../components/UrlShortener.astro';
 import ToolGrid from '../components/ToolGrid.astro';
 import FAQSection from '../components/FAQSection.astro';
 import AdSlot from '../components/AdSlot.astro';
-import { tools } from '../data/tools';
+import { tools, toolBySlug } from '../data/tools';
+import { BRAND, ORG } from '../data/site';
 
 const site = Astro.site!.toString().replace(/\/$/, '');
-const barcodeTools = tools.filter((tool) => tool.slug === 'barcode-generator');
-const passwordTools = tools.filter((tool) => tool.slug === 'password-generator');
-const puzzleTools = tools.filter((tool) => tool.slug === 'word-search-maker');
-const linkTools = tools.filter((tool) => tool.slug === 'url-shortener');
-const qrTools = tools.filter((tool) => !['barcode-generator', 'password-generator', 'word-search-maker', 'url-shortener'].includes(tool.slug));
+const pick = (slugs: string[]) => slugs.map((s) => toolBySlug.get(s)!).filter(Boolean);
+const qrTools = pick(['qr-code-generator', 'custom-qr-code', 'wifi-qr-code', 'vcard-qr-code', 'qr-code-scanner', 'qr-code-reader', 'batch-qr-code']);
+const linkTools = pick(['url-shortener']);
+const moreTools = pick(['barcode-generator', 'password-generator', 'word-search-maker']);
+
 const faqs = [
-  { q: 'Is Code Generator free?', a: 'Yes. The generators are free to use, with no account or watermark.' },
-  { q: 'Is my data private?', a: 'QR codes, barcodes, passwords and word puzzles are created in your browser, and values you enter are not uploaded or stored. The URL Shortener is the exception: short links are saved on our server so they keep working.' },
-  { q: 'Which format should I download?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size. JPG is there if a tool needs it.' },
-  { q: 'Which barcode formats are available?', a: 'Create Code 128, EAN-13, UPC-A, EAN-8, Code 39, ITF-14 and Data Matrix codes. Choose the format required by your product, warehouse or retailer.' },
-  { q: 'Will QR codes work on phones?', a: 'Modern iPhone and Android camera apps read QR codes without an extra app. We scan-check each design before you download, and warn you if colours or a logo might make it hard to read.' },
-  { q: 'Can I make a printable word puzzle?', a: 'Yes. Add your own words to the Word Search Maker and print the puzzle with a separate answer key.' },
+  { q: `Is ${BRAND} free?`, a: 'Yes. QR codes, short links and every other tool are free, with no account, no watermark and no limit on how many you make.' },
+  { q: 'Do the QR codes expire?', a: 'No. QR codes made here are static: the link or details are stored inside the code itself, so it keeps working for as long as the destination does.' },
+  { q: 'Can I add my logo to a QR code?', a: 'Yes. Open “Customise design” or use the Custom QR Code tool to add a logo, change colours and pick a pattern. Every design is scan-checked before you download it.' },
+  { q: 'How does the URL shortener work?', a: 'Paste a long link and get a short one, with an optional custom ending and a matching QR code. Add a + to the end of any short link to see where it goes before you open it.' },
+  { q: 'Is my data private?', a: 'QR codes, barcodes and passwords are created in your browser and never uploaded. The URL shortener is the one exception: short links are saved on our server so they keep working, with no record of who opens them.' },
+  { q: 'Should I download PNG or SVG?', a: 'PNG for screens, documents and social media. SVG for printing and design tools, because it stays sharp at any size.' },
 ];
+
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Code Generator', url: site + '/', description: 'Quickly make codes, passwords and printable word puzzles in your browser.' },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: BRAND,
+    url: site + '/',
+    description: 'Free QR code generator and URL shortener.',
+    publisher: { '@type': 'Organization', name: ORG },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: BRAND,
+    url: site + '/',
+    logo: site + '/icon-512.png',
+    parentOrganization: { '@type': 'Organization', name: ORG },
+  },
   {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'Code Generator — Codes, Passwords and Puzzles',
+    name: `${BRAND} QR Code Generator & URL Shortener`,
     url: site + '/',
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
     isAccessibleForFree: true,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   },
@@ -39,94 +57,85 @@ const jsonLd = [
 ---
 
 <Base
-  title="Code Generator — Free Codes, Passwords & Puzzles"
-  description="Create QR codes, barcodes, secure passwords and printable word search puzzles for free in your browser. No account needed."
+  title={`${BRAND} — Free QR Code Generator & URL Shortener`}
+  description="Create free QR codes for links, Wi-Fi and contacts, add your logo, and shorten long links with a matching QR code. No sign-up, no watermark."
   path="/"
   jsonLd={jsonLd}
 >
   <section class="hero wrap" aria-labelledby="hero-h">
     <div class="copy">
-      <h1 id="hero-h">Make a code, password or word puzzle in seconds.</h1>
-      <p class="lede">Fast, free generators for everyday tasks, made right in your browser.</p>
+      <p class="eyebrow">{BRAND} · free, no sign-up</p>
+      <h1 id="hero-h">QR code generator and URL shortener.</h1>
+      <p class="lede">Make a QR code for any link, Wi-Fi network or contact — or turn a long link into a short one with its own QR code.</p>
     </div>
     <div class="code-maker">
-      <div class="mode-toggle" role="tablist" aria-label="Choose a code type">
+      <div class="mode-toggle" role="tablist" aria-label="What do you want to make?">
         <button id="qr-tab" type="button" role="tab" aria-selected="true" aria-controls="qr-panel" data-code-tab="qr">QR code</button>
-        <button id="barcode-tab" type="button" role="tab" aria-selected="false" aria-controls="barcode-panel" data-code-tab="barcode">Barcode</button>
+        <button id="link-tab" type="button" role="tab" aria-selected="false" aria-controls="link-panel" data-code-tab="link" tabindex="-1">Short link</button>
       </div>
       <div id="qr-panel" role="tabpanel" aria-labelledby="qr-tab" data-code-panel="qr">
         <QRCodeGenerator tool="home" />
       </div>
-      <div id="barcode-panel" role="tabpanel" aria-labelledby="barcode-tab" data-code-panel="barcode" hidden>
-        <BarcodeGenerator />
+      <div id="link-panel" role="tabpanel" aria-labelledby="link-tab" data-code-panel="link" hidden>
+        <UrlShortener tool="home" />
       </div>
     </div>
   </section>
 
   <section class="tools wrap" aria-labelledby="tools-h">
     <div class="section-heading">
-      <div><p class="eyebrow">Create and scan</p><h2 id="tools-h">QR code tools</h2></div>
-      <a href="/qr-code-generator">Open QR generator <span aria-hidden="true">→</span></a>
+      <div><p class="eyebrow">Create, design and scan</p><h2 id="tools-h">QR code tools</h2></div>
+      <a href="/qr-code-generator">Open the QR code generator <span aria-hidden="true">→</span></a>
     </div>
     <ToolGrid tools={qrTools} flagship="qr-code-generator" />
   </section>
 
-  <section class="tools wrap barcodes" aria-labelledby="barcodes-h">
-    <div class="section-heading">
-      <div><p class="eyebrow">Product and inventory labels</p><h2 id="barcodes-h">Barcode tools</h2></div>
-      <a href="/barcode-generator">Open barcode generator <span aria-hidden="true">→</span></a>
-    </div>
-    <ToolGrid tools={barcodeTools} flagship="barcode-generator" />
-  </section>
-
   <section class="tools wrap" aria-labelledby="links-h">
     <div class="section-heading">
-      <div><p class="eyebrow">Share shorter links</p><h2 id="links-h">Link tools</h2></div>
-      <a href="/url-shortener">Open URL shortener <span aria-hidden="true">→</span></a>
+      <div><p class="eyebrow">Shorter links, simpler QR codes</p><h2 id="links-h">URL shortener</h2></div>
+      <a href="/url-shortener">Shorten a link <span aria-hidden="true">→</span></a>
     </div>
-    <ToolGrid tools={linkTools} flagship="url-shortener" />
+    <div class="link-pitch">
+      <ToolGrid tools={linkTools} flagship="url-shortener" />
+      <ul class="points">
+        <li><strong>Custom endings.</strong> Pick a memorable link like /s/spring-menu.</li>
+        <li><strong>QR code included.</strong> Shorter links make simpler codes that scan faster.</li>
+        <li><strong>Safe to share.</strong> Add a + to any short link to preview where it goes.</li>
+      </ul>
+    </div>
   </section>
 
-  <section class="tools wrap" aria-labelledby="passwords-h">
+  <section class="tools wrap" aria-labelledby="more-h">
     <div class="section-heading">
-      <div><p class="eyebrow">Private, on-device tools</p><h2 id="passwords-h">Password tools</h2></div>
-      <a href="/password-generator">Open password generator <span aria-hidden="true">→</span></a>
+      <div><p class="eyebrow">Also free</p><h2 id="more-h">More generators</h2></div>
     </div>
-    <ToolGrid tools={passwordTools} flagship="password-generator" />
-  </section>
-
-  <section class="tools wrap" aria-labelledby="puzzles-h">
-    <div class="section-heading">
-      <div><p class="eyebrow">Printable games and activities</p><h2 id="puzzles-h">Word puzzles</h2></div>
-      <a href="/word-search-maker">Open word search maker <span aria-hidden="true">→</span></a>
-    </div>
-    <ToolGrid tools={puzzleTools} flagship="word-search-maker" />
+    <ToolGrid tools={moreTools} />
   </section>
 
   <AdSlot name="home-mid" />
 
   <section class="how wrap" aria-labelledby="how-h">
-    <h2 id="how-h">Choose a type. Make it. Download.</h2>
+    <h2 id="how-h">Enter. Generate. Download.</h2>
     <ol>
       <li>
         <h3>Enter</h3>
-        <p>Choose a generator, add your details and get a ready-to-use result.</p>
+        <p>Paste a link, or fill in Wi-Fi, contact or message details. Your QR code appears as you type.</p>
       </li>
       <li>
         <h3>Make it yours</h3>
-        <p>Customise your code, password settings or puzzle grid.</p>
+        <p>Pick colours and a pattern, add your logo, or shorten the link first for a cleaner code.</p>
       </li>
       <li>
         <h3>Download</h3>
-        <p>Save a crisp PNG or SVG. No account and no watermark.</p>
+        <p>Save a crisp PNG or SVG. No account, no watermark, and static QR codes never expire.</p>
       </li>
     </ol>
   </section>
 
   <section class="private wrap" aria-labelledby="priv-h">
     <div class="priv-card">
-      <h2 id="priv-h">Your data stays on your device.</h2>
-      <p>Codes, passwords and word puzzles are created in your browser. Values you enter are never uploaded or stored.</p>
+      <h2 id="priv-h">QR codes are made in your browser.</h2>
+      <p>Links, Wi-Fi passwords and contact details you turn into QR codes never leave your device. Short links are saved on our server so they keep working — with no record of who opens them.</p>
       <a href="/privacy">How we handle data</a>
     </div>
   </section>
@@ -138,11 +147,26 @@ const jsonLd = [
   <script>
     const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-code-tab]')];
     const panels = [...document.querySelectorAll<HTMLElement>('[data-code-panel]')];
-    tabs.forEach((tab) => tab.addEventListener('click', () => {
+    const select = (tab: HTMLButtonElement, focus = false) => {
       const selected = tab.dataset.codeTab;
-      tabs.forEach((item) => item.setAttribute('aria-selected', String(item === tab)));
+      tabs.forEach((item) => {
+        const on = item === tab;
+        item.setAttribute('aria-selected', String(on));
+        item.tabIndex = on ? 0 : -1;
+      });
       panels.forEach((panel) => (panel.hidden = panel.dataset.codePanel !== selected));
-    }));
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          select(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length], true);
+        }
+      });
+    });
+    if (location.hash === '#short-link') select(tabs[1]);
   </script>
 </Base>
 
@@ -158,8 +182,8 @@ const jsonLd = [
     max-width: 44rem;
   }
   h1 {
-    font-size: clamp(2.5rem, 1.5rem + 4.6vw, 5rem);
-    max-width: 14ch;
+    font-size: clamp(2.4rem, 1.4rem + 4.2vw, 4.6rem);
+    max-width: 16ch;
   }
   .lede {
     font-size: var(--step-1);
@@ -220,8 +244,26 @@ const jsonLd = [
     background: var(--ink);
     color: #fff;
   }
-  .barcodes {
-    margin-top: var(--s-8);
+  .link-pitch {
+    display: grid;
+    gap: var(--s-5);
+    align-items: center;
+  }
+  @media (min-width: 760px) {
+    .link-pitch {
+      grid-template-columns: minmax(220px, 300px) 1fr;
+    }
+  }
+  .points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+    color: var(--ink-soft);
+  }
+  .points strong {
+    color: var(--ink);
   }
   .tools h2,
   .how h2 {
